@@ -5,3 +5,4 @@ tailwind.config.js
 ./css/style.css
 department.md 
 changelog.md 
+.env
