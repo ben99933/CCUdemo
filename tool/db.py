@@ -40,6 +40,12 @@ for j in links:
         c = "'" + row[4] + "'";
         d = "'" + row[8] + "'";
         e = "'" + row[9] + "'";
+        if j == "I001.html":
+            a = "'" + row[2] + "'";
+            b = "'" + row[4] + "'";
+            c = "'" + row[5] + "'";
+            d = "'" + row[9] + "'";
+            e = "'" + row[10] + "'";
         try:
             #若有id,class_name,class_time,class_room相同的資料，則不新增
             cur.execute(f"select * from course where id = {a} and class_name = {b} and class_time = {d} and class_room = {e}")
