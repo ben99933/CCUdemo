@@ -49,7 +49,16 @@
             <div class = "shadow-md shadow-gray-400 rounded-lg my-10 py-3 px-3">
                 <form>
                     <div class = "text-xl font-semibold">
-                        手動輸入資訊
+                        搜尋課程
+                    </div>
+                    <div class = "grid">
+                        <input type = "text" id = "search" placeholder = "請輸入課程名稱" class = "text-let w-full py-1 border-b border-b-[#cea671]">
+                    </div>
+                </form>
+                <hr class = 'my-3'>
+                <form>
+                    <div class = "text-xl font-semibold">
+                        輸入資訊
                     </div>
                     <div class = "grid grid-cols-5 md:grid-cols-10 my-3">
                         <div class = 'col-span-2'>
@@ -180,4 +189,29 @@
     <script type = "module" src = "/js/init.js"></script>
     <script type = "module" src = "/js/course.js"></script>
     <script src = "/js/func.js"></script>
+    
+    <!--搜尋框提示-->
+    <script>
+        var searchBox = document.getElementById("Course name");
+        var listBox = document.getElementById("list box");
+        var timer = null;
+
+        searchBox.oninput = function (){
+            var key = this.value;
+            if(key.trim().length == 0){
+                listBox.style.display = "none";
+                return;
+            }
+
+            //請求延遲發送
+            timer = setTimeout(()=>{
+                clearTimeout(timer);
+            });
+            ajax({
+                type:"get",
+                url:""
+            });
+        }
+    </script>
+
 </html>
