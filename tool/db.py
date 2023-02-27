@@ -1,18 +1,21 @@
 from funcion import get_table_data
 from funcion import get_a_link
+from dotenv import load_dotenv
 import mysql.connector
+import os
 
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 # 根目錄的網址
-url1 = 'https://kiki.ccu.edu.tw/~ccmisp06/Course/'
+url1 = os.getenv("CCU_COURSE_URL")
 
 try:
     conn = mysql.connector.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        passwd='asd63254',
-        db='ccu',
+        host=os.getenv("MYSQL_HOST"),
+        port=os.getenv("MYSQL_PORT"),
+        user=os.getenv("MYSQL_USER"),
+        passwd=os.getenv("MYSQL_PASSWORD"),
+        db=os.getenv("MYSQL_DATABASE"),
     )
     cur = conn.cursor()
     cur.execute("use ccu;")
