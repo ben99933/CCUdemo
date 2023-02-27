@@ -7,6 +7,7 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index.js');
 var aboutRouter = require('./routes/about.js');
+var searchCourseRouter = require('./routes/searchCourse.js');
 
 var app = express();
 
@@ -23,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // http request 放這裡
 app.use('/', indexRouter);
 app.use('/about', aboutRouter);
-
+app.use("/searchCourse", searchCourseRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
