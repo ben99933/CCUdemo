@@ -6,4 +6,5 @@ tailwind.config.js
 department.md 
 changelog.md 
 .env
+./tool/__pycache__/
 
