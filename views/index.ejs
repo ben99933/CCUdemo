@@ -181,6 +181,15 @@
                 </div>
             </div>
         </div>
+        <script>
+            function click_hint(li){
+                let time = splittime(dict[li.id].class_time)
+                for(let j = 0; j < time.length; j++)
+                        push_to_table(time[j][1], time[j][2], dict[li.id].class_name, dict[li.id].class_room, time[j][0]);
+                listBox.innerHTML = "";
+                searchBox.value = "";
+            }
+        </script>
     </body>
     
     <script src = "https://code.jquery.com/jquery-3.6.0.min.js" integrity = "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin = "anonymous"></script>

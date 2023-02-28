@@ -286,14 +286,13 @@ function splittime(time){
 
 let dict = {};
 
-function click_hint(obj){
-    console.log("dadwd");
+function oooclick_hint(obj){
     console.log(obj);
-    // let i = event.target.id;
-    //     console.log(dict[i])
-    //     let time = splittime(dict[i].class_time)
-    //     for(let j = 0; j < time.length; j++)
-    //         push_to_table(time[j][1], time[j][2], dict[i].class_name, dict[i].class_room, time[j][0]);
+    // let time = splittime(dict[li.id].class_time)
+    //                         for(let j = 0; j < time.length; j++)
+    //                             push_to_table(time[j][1], time[j][2], dict[li.id].class_name, dict[li.id].class_room, time[j][0]);
+    //                         listBox.innerHTML = "";
+    //                         searchBox.value = "";
 }
 
 function search(){
@@ -311,28 +310,19 @@ function search(){
                 xhr.send();
                 xhr.onload = ()=>{
                     let data = xhr.response;
-                    console.log(data)
+                    // console.log(data)
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
                         // 以在li上面顯示的字串為key，將資料存入dict
                         let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
                         dict[displaystr] = data[i];
                         var li = document.createElement("li");
-                        li.setAttribute("id",displaystr)
+                        li.setAttribute("id",displaystr);
+                        li.setAttribute("onclick","click_hint(this)");
                         // console.log(li.id);
                         li.innerHTML = displaystr;
                         // console.log(displaystr)
                         listBox.appendChild(li);
-                        li.onclick = ()=>{
-                            console.log(li)
-                            console.log(dict[li.id])
-                            console.log(li.id)
-                            let time = splittime(dict[li.id].class_time)
-                            for(let j = 0; j < time.length; j++)
-                                push_to_table(time[j][1], time[j][2], dict[li.id].class_name, dict[li.id].class_room, time[j][0]);
-                            listBox.innerHTML = "";
-                            searchBox.value = "";
-                        };
                     }
                 };
             }
