@@ -284,6 +284,18 @@ function splittime(time){
     return arr;
 }
 
+let dict = {};
+
+function click_hint(obj){
+    console.log("dadwd");
+    console.log(obj);
+    // let i = event.target.id;
+    //     console.log(dict[i])
+    //     let time = splittime(dict[i].class_time)
+    //     for(let j = 0; j < time.length; j++)
+    //         push_to_table(time[j][1], time[j][2], dict[i].class_name, dict[i].class_room, time[j][0]);
+}
+
 function search(){
     if(timer){
         clearTimeout(timer);
@@ -299,23 +311,24 @@ function search(){
                 xhr.send();
                 xhr.onload = ()=>{
                     let data = xhr.response;
+                    console.log(data)
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
                         let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
+                        dict[displaystr] = data[i];
                         var li = document.createElement("li");
-                        li.setAttribute("id",i)
+                        li.setAttribute("id",displaystr)
                         li.innerHTML = displaystr;
                         listBox.appendChild(li);
-                    }
-                    listBox.addEventListener('click', function(event) {
-                        console.log(data)
-                        if (event.target.tagName === 'LI') {
-                            let i = event.target.id;
-                            let time = splittime(data[i].class_time)
+                        li.onclick = ()=>{
+                            console.log(li.id)
+                            let time = splittime(dict[li.id].class_time)
                             for(let j = 0; j < time.length; j++)
-                                push_to_table(time[j][1], time[j][2], data[i].class_name, data[i].class_room, time[j][0]);
-                        }
-                    });
+                                push_to_table(time[j][1], time[j][2], dict[li.id].class_name, dict[li.id].class_room, time[j][0]);
+                            listBox.innerHTML = "";
+                            searchBox.value = "";
+                        };
+                    }
                 };
             }
         }
