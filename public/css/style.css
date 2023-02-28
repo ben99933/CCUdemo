@@ -59,3 +59,9 @@ td
 {
     @apply max-w-md w-fit !important;
 }
+
+#list-box li:hover{
+    background-color: #cea671;
+    color: white;
+    cursor: pointer;
+}
