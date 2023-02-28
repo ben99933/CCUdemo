@@ -10,6 +10,8 @@ const CHINESE_WORD_TO_NUMBER =
     '六': 6
 }
 
+const CHINESE_DATA = ['一', '二', '三', '四', '五', '六']
+
 const CLASS_MAP =
 {
     '1': 1,
@@ -210,3 +212,117 @@ export function newCourse()
         }
     }
 }
+
+var searchBox = document.getElementById("search");
+var listBox = document.getElementById("list-box");
+var timer = null;
+var key = searchBox.value;
+
+function push_to_table(start, end, className, classLocation, classDay){
+    console.log(start, end, className, classLocation, classDay);
+    let startClass = 0;
+    let endClass = 0;
+    if(start >= 'A' && end <= 'J')
+    {
+        startClass = 1 + (CLASS_MAP[start] - 1) * 3
+        endClass = 3 + (CLASS_MAP[end] - 1) * 3
+    }
+    else 
+    {
+        startClass = 1 + (CLASS_MAP[start] - 1) * 2
+        endClass = CLASS_MAP[end] * 2 
+    }
+    function check()
+    {
+        var storedUsed = JSON.parse(localStorage.used);
+        for(var i = startClass - 1; i < endClass; ++i)
+        {
+            if(storedUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i])
+            {
+                alert("您的課堂有所衝突!");
+                return false;
+            }
+        }
+        return true;
+    }
+    if(check())
+    {
+        let list = $("#accordion").get();
+        var isUsed = JSON.parse(localStorage.used);
+        var courses = JSON.parse(localStorage.courses);
+        var elem = document.getElementById("default")
+        if(list.length === 1 && elem)
+            elem.parentNode.removeChild(elem);
+        $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>刪除</button></td></tr>`);
+        $("#accordion").show();
+        courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+        for(var i = startClass - 1; i < endClass; ++i)
+            isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
+        localStorage.used = JSON.stringify(isUsed);
+        localStorage.courses = JSON.stringify(courses);
+        getCourse();
+    }
+}
+
+function splittime(time){
+    //回傳一個二維陣列，每個元素為[星期, 開始節次, 結束節次]
+    let store = time.split(" ");
+    store.splice(0,1);
+    let arr = [];
+    for(let i = 0; i < store.length; i++){
+        let temp = [];
+        let a = store[i].charAt(0);
+        store[i] = store[i].slice(1);
+        temp.push(a);
+        store[i] = store[i].split(",");
+        temp.push(store[i][0]);
+        temp.push(store[i][store[i].length-1]);
+        arr.push(temp);
+    }
+    return arr;
+}
+
+function search(){
+    if(timer){
+        clearTimeout(timer);
+    }
+    timer = setTimeout(()=>{
+        if(key != searchBox.value){
+            key = searchBox.value;
+            listBox.innerHTML = "";
+            if(key != ""){
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/searchCourse?keyword=" + key.trim());
+                xhr.responseType='json'
+                xhr.send();
+                xhr.onload = ()=>{
+                    let data = xhr.response;
+                    for(var i = 0; i < data.length; i++){
+                        if(data[i]==undefined)continue;
+                        let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
+                        var li = document.createElement("li");
+                        li.setAttribute("id",i)
+                        li.innerHTML = displaystr;
+                        listBox.appendChild(li);
+                    }
+                    listBox.addEventListener('click', function(event) {
+                        console.log(data)
+                        if (event.target.tagName === 'LI') {
+                            let i = event.target.id;
+                            let time = splittime(data[i].class_time)
+                            for(let j = 0; j < time.length; j++)
+                                push_to_table(time[j][1], time[j][2], data[i].class_name, data[i].class_room, time[j][0]);
+                        }
+                    });
+                };
+            }
+        }
+    }, 250);
+}
+
+
+searchBox.addEventListener('input', () => {
+    search();
+});

@@ -194,50 +194,5 @@
     <script type = "module" src = "/js/init.js"></script>
     <script type = "module" src = "/js/course.js"></script>
     <script src = "/js/func.js"></script>
-    
-    <script>
-        var searchBox = document.getElementById("search");
-        var listBox = document.getElementById("list-box");
-        var timer = null;
-        var key = searchBox.value;
-
-        function search(){
-            
-            if(timer){
-                clearTimeout(timer);
-            }
-            timer = setTimeout(()=>{
-                if(key != searchBox.value){
-                    key = searchBox.value;
-                    listBox.innerHTML = "";
-                    if(key != ""){
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("GET", "/searchCourse?keyword=" + key.trim());
-                        xhr.send();
-                        xhr.onload = ()=>{
-                            var data = JSON.parse(xhr.responseText);
-                            for(var i = 0; i < data.length; i++){
-                                if(data[i]==undefined)continue;
-                                var li = document.createElement("li");
-                                li.innerHTML = data[i];
-                                /*這裡之後再實作
-                                li.onclick = ()=>{
-                                    searchBox.value = li.innerHTML;
-                                    listBox.innerHTML = "";
-                                };*/
-                                listBox.appendChild(li);
-                            }
-                        };
-                    }
-                }
-            }, 250);
-        }
-        
-        searchBox.oninput = search;
-        searchBox.onchange = ()=>{
-            listBox.innerHTML = "";
-        };
-        
-    </script>
 
 </html>

@@ -9,20 +9,22 @@ router.get('/', async function(req, res) {
 
   //=============讓controller幫我們查==========
   var array = await controller.searchCourses(keyword);
-  array = array.map((item)=>{
-    let id = item.id;
-    let class_name =  item.class_name;
-    let teacher = item.teacher;
-    let class_time =  item.class_time;
-    let class_room = item.class_room;
-    return `[${id}] ${class_name}, ${teacher}, ${class_time}, ${class_room}`;
-  });
-  var result = array.filter(item=>item.includes(keyword));
-  //====================================================
+  res.send(array);
+  // console.log(array);
+  // array = array.map((item)=>{
+  //   let id = item.id;
+  //   let class_name =  item.class_name;
+  //   let teacher = item.teacher;
+  //   let class_time =  item.class_time;
+  //   let class_room = item.class_room;
+  //   console.log(id);
+  //   return `[${id}] ${class_name}, ${teacher}, ${class_time}, ${class_room}`;
+  // });
+  // var result = array.filter(item=>item.includes(keyword));
+  // //====================================================
 
-  res.send(result);
+  // res.send(result);
 });
-
 
 module.exports = router;
 
