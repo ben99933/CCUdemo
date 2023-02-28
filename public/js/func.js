@@ -34,3 +34,5 @@ function courseCollapse()
     else
         x.classList.add("active");
 }
+
+

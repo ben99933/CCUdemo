@@ -8,7 +8,7 @@ router.get('/', async function(req, res) {
   //keyword = keyword.trim().toLowerCase();
 
   //=============讓controller幫我們查==========
-  var array = await controller.searchCourse(keyword);
+  var array = await controller.searchCourses(keyword);
   array = array.map((item)=>{
     let id = item.id;
     let class_name =  item.class_name;
