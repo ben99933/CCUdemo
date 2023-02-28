@@ -199,7 +199,8 @@
         var listBox = document.getElementById("list-box");
         var timer = null;
         var key = searchBox.value;
-        searchBox.oninput = ()=>{
+
+        function search(){
             
             if(timer){
                 clearTimeout(timer);
@@ -229,7 +230,9 @@
                     }
                 }
             }, 250);
-        };
+        }
+        
+        searchBox.oninput = search;
         searchBox.onchange = ()=>{
             listBox.innerHTML = "";
         };
