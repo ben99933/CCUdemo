@@ -57,7 +57,7 @@ function openModal(modalId)
     modal.classList.remove('hidden')
 }
 
-export async function resetTable()
+export function resetTable()
 {
     var cloneTable = $("#curriculum").clone()
     $("#curriculum").remove()

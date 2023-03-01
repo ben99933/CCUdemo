@@ -130,9 +130,9 @@ export function createCurriculum()
     });
 }
 
-export async function getCourse()
+export function getCourse()
 {
-    await resetTable()
+    resetTable()
     createCurriculum().then($("#curriculum").rowspanizer())
     $("#curriculum").show()
     document.getElementById("curriculum").style.visibility = "visible"; 
