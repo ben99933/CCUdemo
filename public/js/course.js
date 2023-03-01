@@ -218,6 +218,8 @@ var listBox = document.getElementById("list-box");
 var timer = null;
 var key = searchBox.value;
 
+// 點擊提示框中的選項，下放到下方課表中，需傳入參數依序為：課程名稱、教室、星期、開始節次、結束節次
+//插入成功返回1，失敗返回0
 function push_to_table(start, end, className, classLocation, classDay){
     console.log(start, end, className, classLocation, classDay);
     let startClass = 0;
@@ -263,7 +265,9 @@ function push_to_table(start, end, className, classLocation, classDay){
         localStorage.used = JSON.stringify(isUsed);
         localStorage.courses = JSON.stringify(courses);
         getCourse();
+        return true;
     }
+    return false;
 }
 
 function splittime(time){
@@ -315,14 +319,25 @@ function search(){
                         if(data[i]==undefined)continue;
                         // 以在li上面顯示的字串為key，將資料存入dict
                         let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
+                        // 用一個dict來存放顯示的字串與資料，以顯示的字串為key，資料為value
                         dict[displaystr] = data[i];
                         var li = document.createElement("li");
                         li.setAttribute("id",displaystr);
-                        li.setAttribute("onclick","click_hint(this)");
-                        // console.log(li.id);
+                        // li.setAttribute("onclick","click_hint(this)");
                         li.innerHTML = displaystr;
-                        // console.log(displaystr)
                         listBox.appendChild(li);
+                        //為每個li以id加上相對應的click事件，用id去抓取對應的li，並將資料傳入push_to_table
+                        let temp = document.getElementById(displaystr);
+                        temp.addEventListener('click', () => {
+                            // console.log(temp.id);
+                            let time = splittime(dict[temp.id].class_time)
+                            for(let j = 0; j < time.length; j++)
+                                // 若有衝堂，則不加入，這裡對於一個課程有多個時間的情況，只要有一個時間衝堂，就不加入，
+                                // 不然若兩個時間都衝堂，會導致一個課程被加入兩次，會跳出兩次課程衝堂的警告
+                                if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
+                            listBox.innerHTML = "";
+                            searchBox.value = "";
+                        });
                     }
                 };
             }
