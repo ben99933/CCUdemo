@@ -138,6 +138,20 @@ export function getCourse()
     document.getElementById("curriculum").style.visibility = "visible"; 
 }
 
+function check(startClass, endClass, classDay)
+{
+    var storedUsed = JSON.parse(localStorage.used);
+    for(var i = startClass - 1; i < endClass; ++i)
+    {
+        if(storedUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i])
+        {
+            alert("您的課堂有所衝突!");
+            return false;
+        }
+    }
+    return true;
+}
+
 export function newCourse()
 {
     let className = document.getElementById("Course name").value;
@@ -178,20 +192,7 @@ export function newCourse()
             startClass = 1 + (CLASS_MAP[start] - 1) * 2
             endClass = CLASS_MAP[end] * 2 
         }
-        function check()
-        {
-            var storedUsed = JSON.parse(localStorage.used);
-            for(var i = startClass - 1; i < endClass; ++i)
-            {
-                if(storedUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i])
-                {
-                    alert("您的課堂有所衝突!");
-                    return false;
-                }
-            }
-            return true;
-        }
-        if(check())
+        if(check(startClass, endClass, classDay))
         {
             let list = $("#accordion").get();
             var isUsed = JSON.parse(localStorage.used);
@@ -234,20 +235,7 @@ function push_to_table(start, end, className, classLocation, classDay){
         startClass = 1 + (CLASS_MAP[start] - 1) * 2
         endClass = CLASS_MAP[end] * 2 
     }
-    function check()
-    {
-        var storedUsed = JSON.parse(localStorage.used);
-        for(var i = startClass - 1; i < endClass; ++i)
-        {
-            if(storedUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i])
-            {
-                alert("您的課堂有所衝突!");
-                return false;
-            }
-        }
-        return true;
-    }
-    if(check())
+    if(check(startClass, endClass, classDay))
     {
         let list = $("#accordion").get();
         var isUsed = JSON.parse(localStorage.used);
@@ -270,8 +258,10 @@ function push_to_table(start, end, className, classLocation, classDay){
     return false;
 }
 
+
+
 function splittime(time){
-    //回傳一個二維陣列，每個元素為[星期, 開始節次, 結束節次]
+    // 回傳值為二維陣列，為[][],內部陣列為[星期, 開始節次, 結束節次]
     let store = time.split(" ");
     store.splice(0,1);
     let arr = [];
@@ -290,14 +280,6 @@ function splittime(time){
 
 let dict = {};
 
-function oooclick_hint(obj){
-    console.log(obj);
-    // let time = splittime(dict[li.id].class_time)
-    //                         for(let j = 0; j < time.length; j++)
-    //                             push_to_table(time[j][1], time[j][2], dict[li.id].class_name, dict[li.id].class_room, time[j][0]);
-    //                         listBox.innerHTML = "";
-    //                         searchBox.value = "";
-}
 
 function search(){
     if(timer){
@@ -330,10 +312,13 @@ function search(){
                         let temp = document.getElementById(displaystr);
                         temp.addEventListener('click', () => {
                             // console.log(temp.id);
+                            let i = 0;
                             let time = splittime(dict[temp.id].class_time)
                             for(let j = 0; j < time.length; j++)
                                 // 若有衝堂，則不加入，這裡對於一個課程有多個時間的情況，只要有一個時間衝堂，就不加入，
                                 // 不然若兩個時間都衝堂，會導致一個課程被加入兩次，會跳出兩次課程衝堂的警告
+                                if(!check(time[j][1], time[j][2], time[j][0])) return;
+                            for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
                             listBox.innerHTML = "";
                             searchBox.value = "";
