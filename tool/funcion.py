@@ -7,6 +7,7 @@ def get_table_data(url):
     response = requests.get(url)
     # 使用 Beautiful Soup 解析 HTML 代碼
     soup = BeautifulSoup(response.content, 'html.parser')
+    # print(soup)
     # 找到網頁中所有的 table 標籤
     table_elements = soup.find_all('table')
     data = []
@@ -24,11 +25,10 @@ def get_table_data(url):
                 if i == 8 or i == 9:
                     b = a
                 elif i != 8 and i != 9:
-                    for q in a:
-                        if 65 <= ord(q) <= 91 or 97 <= ord(q) <= 123:
-                            break
-                        else:
-                            b += q
+                    for font in td.find_all('font'):
+                        if len(font.contents) > 0:
+                            b = font.contents[0]
+                        break
                 row_data.append(b)
                 i += 1
             if row_data:
