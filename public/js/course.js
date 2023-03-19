@@ -138,13 +138,27 @@ export function getCourse()
     document.getElementById("curriculum").style.visibility = "visible"; 
 }
 
-function check(startClass, endClass, classDay)
-{
+function check(start, end, classDay)
+{   
+    let startClass = 0;
+    let endClass = 0;
+    if(start >= 'A' && end <= 'J')
+    {
+        startClass = 1 + (CLASS_MAP[start] - 1) * 3
+        endClass = 3 + (CLASS_MAP[end] - 1) * 3
+    }
+    else 
+    {
+        startClass = 1 + (CLASS_MAP[start] - 1) * 2
+        endClass = CLASS_MAP[end] * 2 
+    }
     var storedUsed = JSON.parse(localStorage.used);
+    console.log(storedUsed);
     for(var i = startClass - 1; i < endClass; ++i)
     {
         if(storedUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i])
-        {
+        {   
+            console.log(i);
             alert("您的課堂有所衝突!");
             return false;
         }
@@ -223,18 +237,8 @@ var key = searchBox.value;
 //插入成功返回1，失敗返回0
 function push_to_table(start, end, className, classLocation, classDay){
     console.log(start, end, className, classLocation, classDay);
-    let startClass = 0;
-    let endClass = 0;
-    if(start >= 'A' && end <= 'J')
-    {
-        startClass = 1 + (CLASS_MAP[start] - 1) * 3
-        endClass = 3 + (CLASS_MAP[end] - 1) * 3
-    }
-    else 
-    {
-        startClass = 1 + (CLASS_MAP[start] - 1) * 2
-        endClass = CLASS_MAP[end] * 2 
-    }
+    let startClass = start;
+    let endClass = end;
     if(check(startClass, endClass, classDay))
     {
         let list = $("#accordion").get();
@@ -314,10 +318,12 @@ function search(){
                             // console.log(temp.id);
                             let i = 0;
                             let time = splittime(dict[temp.id].class_time)
-                            for(let j = 0; j < time.length; j++)
+                            for(let j = 0; j < time.length; j++){
                                 // 若有衝堂，則不加入，這裡對於一個課程有多個時間的情況，只要有一個時間衝堂，就不加入，
                                 // 不然若兩個時間都衝堂，會導致一個課程被加入兩次，會跳出兩次課程衝堂的警告
+                                console.log(time[j][1], time[j][2], time[j][0]);
                                 if(!check(time[j][1], time[j][2], time[j][0])) return;
+                            }
                             for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
                             listBox.innerHTML = "";
