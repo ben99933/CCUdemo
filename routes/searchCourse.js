@@ -9,8 +9,8 @@ router.get('/', async function(req, res) {
 
   //=============讓controller幫我們查==========
 
-  //var array = await controller.searchCourses(keyword);
-  var array = null;
+  var array = await controller.searchCourses(keyword);
+  
   res.send(array);
 });
 
