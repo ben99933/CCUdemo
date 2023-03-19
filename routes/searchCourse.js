@@ -8,7 +8,9 @@ router.get('/', async function(req, res) {
   //keyword = keyword.trim().toLowerCase();
 
   //=============讓controller幫我們查==========
-  var array = await controller.searchCourses(keyword);
+
+  //var array = await controller.searchCourses(keyword);
+  var array = null;
   res.send(array);
 });
 
