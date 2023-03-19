@@ -11,25 +11,27 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 # 根目錄的網址
 url1 = os.getenv("CCU_COURSE_URL")
 
-# try:
-#     conn = mysql.connector.connect(
-#         host=os.getenv("MYSQL_HOST"),
-#         port=os.getenv("MYSQL_PORT"),
-#         user=os.getenv("MYSQL_USER"),
-#         passwd=os.getenv("MYSQL_PASSWORD"),
-#         db=os.getenv("MYSQL_DATABASE"),
-#     )
-#     cur = conn.cursor()
-#     cur.execute("use ccu;")
-# except Exception as ex:
-#     print("connect error",end=" ")
-#     print(ex)
-
 try:
-    conn = psycopg2.connect()
+    # conn = mysql.connector.connect(
+    #     host=os.getenv("MYSQL_HOST"),
+    #     port=os.getenv("MYSQL_PORT"),
+    #     user=os.getenv("MYSQL_USER"),
+    #     passwd=os.getenv("MYSQL_PASSWORD"),
+    #     db=os.getenv("MYSQL_DATABASE"),
+    # )
+    conn = psycopg2.connect(
+        database=os.getenv("DATABASE_NAME"),
+        user=os.getenv("DATABASE_USER"),
+        password=os.getenv("DATABASE_PASSWORD"),
+        host=os.getenv("DATABASE_HOST"),
+        port=os.getenv("DATABASE_PORT")
+    )
+    cur = conn.cursor()
+    # cur.execute("use ccu;")
 except Exception as ex:
     print("connect error",end=" ")
     print(ex)
+
 
 totally_correct = 0
 totally_error = 0
@@ -83,6 +85,7 @@ for j in links:
     else:
         print("")
 cur.close()
+conn.close()
 
 print(f"totally_correct:{totally_correct} totally_error:{totally_error}")
 for num,i in enumerate(error_message):
