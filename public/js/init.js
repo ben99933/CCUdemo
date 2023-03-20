@@ -236,6 +236,7 @@ export function resetTable()
 
 export async function init()
 {
+    let print = document.getElementById("print")
     var sel1 = document.getElementById("Select1");
     var tmp = "<option selected>星期</option>";
     for(var i = 1; i < 7; ++i)
