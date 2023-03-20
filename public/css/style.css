@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
+img
+{
+    display: unset;
+}
 td
 {
     @apply border-collapse mx-4 py-1 border-b text-lg font-medium mx-auto break-words border-0;
