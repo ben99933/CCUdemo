@@ -310,6 +310,7 @@ export async function init()
     else
     {
         openModal("modal1");
+        let print = document.getElementById("print")
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
         {
             print.style.display = "none";
