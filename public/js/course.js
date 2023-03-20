@@ -153,12 +153,12 @@ function check(start, end, classDay)
         endClass = CLASS_MAP[end] * 2 
     }
     var storedUsed = JSON.parse(localStorage.used);
-    console.log(storedUsed);
+    // console.log(storedUsed);
     for(var i = startClass - 1; i < endClass; ++i)
     {
         if(storedUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i])
         {   
-            console.log(i);
+            // console.log(i);
             alert("您的課堂有所衝突!");
             return false;
         }
@@ -236,30 +236,36 @@ var key = searchBox.value;
 // 點擊提示框中的選項，下放到下方課表中，需傳入參數依序為：課程名稱、教室、星期、開始節次、結束節次
 //插入成功返回1，失敗返回0
 function push_to_table(start, end, className, classLocation, classDay){
-    console.log(start, end, className, classLocation, classDay);
+    // console.log(start, end, className, classLocation, classDay);
     let startClass = start;
     let endClass = end;
-    if(check(startClass, endClass, classDay))
+    if(start >= 'A' && end <= 'J')
     {
-        let list = $("#accordion").get();
-        var isUsed = JSON.parse(localStorage.used);
-        var courses = JSON.parse(localStorage.courses);
-        var elem = document.getElementById("default")
-        if(list.length === 1 && elem)
-            elem.parentNode.removeChild(elem);
-        $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>刪除</button></td></tr>`);
-        $("#accordion").show();
-        courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
-        for(var i = startClass - 1; i < endClass; ++i)
-            isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
-        localStorage.used = JSON.stringify(isUsed);
-        localStorage.courses = JSON.stringify(courses);
-        getCourse();
-        return true;
+        startClass = 1 + (CLASS_MAP[start] - 1) * 3
+        endClass = 3 + (CLASS_MAP[end] - 1) * 3
     }
-    return false;
+    else 
+    {
+        startClass = 1 + (CLASS_MAP[start] - 1) * 2
+        endClass = CLASS_MAP[end] * 2 
+    }
+    let list = $("#accordion").get();
+    var isUsed = JSON.parse(localStorage.used);
+    var courses = JSON.parse(localStorage.courses);
+    var elem = document.getElementById("default")
+    if(list.length === 1 && elem)
+        elem.parentNode.removeChild(elem);
+    $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>刪除</button></td></tr>`);
+    $("#accordion").show();
+    courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+    for(var i = startClass - 1; i < endClass; ++i)
+        isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
+    localStorage.used = JSON.stringify(isUsed);
+    localStorage.courses = JSON.stringify(courses);
+    getCourse();
+    return true;
 }
 
 
@@ -321,7 +327,7 @@ function search(){
                             for(let j = 0; j < time.length; j++){
                                 // 若有衝堂，則不加入，這裡對於一個課程有多個時間的情況，只要有一個時間衝堂，就不加入，
                                 // 不然若兩個時間都衝堂，會導致一個課程被加入兩次，會跳出兩次課程衝堂的警告
-                                console.log(time[j][1], time[j][2], time[j][0]);
+                                // console.log(time[j][1], time[j][2], time[j][0]);
                                 if(!check(time[j][1], time[j][2], time[j][0])) return;
                             }
                             for(let j = 0; j < time.length; j++)
