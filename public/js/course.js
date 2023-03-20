@@ -196,18 +196,18 @@ export function newCourse()
         }
         let startClass = 0;
         let endClass = 0;
-        if(start >= 'A' && end <= 'J')
-        {
-            startClass = 1 + (CLASS_MAP[start] - 1) * 3
-            endClass = 3 + (CLASS_MAP[end] - 1) * 3
-        }
-        else 
-        {
-            startClass = 1 + (CLASS_MAP[start] - 1) * 2
-            endClass = CLASS_MAP[end] * 2 
-        }
-        if(check(startClass, endClass, classDay))
-        {
+        if(check(start, end, classDay))
+        {   
+            if(start >= 'A' && end <= 'J')
+            {
+                startClass = 1 + (CLASS_MAP[start] - 1) * 3
+                endClass = 3 + (CLASS_MAP[end] - 1) * 3
+            }
+            else 
+            {
+                startClass = 1 + (CLASS_MAP[start] - 1) * 2
+                endClass = CLASS_MAP[end] * 2 
+            }
             let list = $("#accordion").get();
             var isUsed = JSON.parse(localStorage.used);
             var courses = JSON.parse(localStorage.courses);
