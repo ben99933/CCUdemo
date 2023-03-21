@@ -342,7 +342,15 @@ function search(){
                             searchBox.value = "";
                         });
                     }
+                    if(data.length > 5){
+                        // let item = listBox.getElementsByTagName("li");
+                        listBox.style.height = "7rem";
+                    }else{
+                        listBox.style.height = "auto";
+                    }
                 };
+            }else{
+                listBox.style.height = "auto";
             }
         }
     }, 250);
