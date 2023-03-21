@@ -306,13 +306,20 @@ function search(){
                 xhr.responseType='json';
                 xhr.send();
                 xhr.onload = ()=>{
-                    let data = xhr.response;
-                    // console.log(data)
+                    let data = xhr.response.rows;
+                    //console.log(data);
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
                         // 以在li上面顯示的字串為key，將資料存入dict
-                        let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
+                        let id = data[i].id;
+                        let class_name = data[i].class_name;
+                        let teacher = data[i].teacher;
+                        let class_time = data[i].class_time;
+                        let class_room = data[i].class_room;
+                        let displaystr = `[${id}] ${class_name}, ${teacher}, ${class_time}, ${class_room}`;
+                        // let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
                         // 用一個dict來存放顯示的字串與資料，以顯示的字串為key，資料為value
+                        //console.log(`displaystr: ${displaystr}`);
                         dict[displaystr] = data[i];
                         var li = document.createElement("li");
                         li.setAttribute("id",displaystr);

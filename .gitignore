@@ -4,4 +4,6 @@ department.md
 changelog.md 
 .env
 tool/__pycache__/
+logs.txt
 
+git tutorial.txt
