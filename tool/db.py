@@ -53,19 +53,21 @@ for j in links:
         c = "'" + row[4] + "'";
         d = "'" + row[8] + "'";
         e = "'" + row[9] + "'";
+        credit = "'" + row[6] + "'";
         if j == "I001.html":
             a = "'" + row[2] + "'";
             b = "'" + row[4] + "'";
             c = "'" + row[5] + "'";
             d = "'" + row[9] + "'";
             e = "'" + row[10] + "'";
+            credit = "'" + row[7] + "'";
         try:
             #若有id,class_name,class_time,class_room相同的資料，則不新增
-            cur.execute(f"select * from course where id = {a} and class_name = {b} and class_time = {d} and class_room = {e}")
+            cur.execute(f"select * from course where id = {a} and class_name = {b} and class_time = {d} and class_room = {e} and credit = {credit};")
             dd = cur.fetchone()
             if dd != None:
                 continue
-            command = f"INSERT INTO course (id, class_name, teacher, class_time, class_room) VALUES ( {a}, {b}, {c}, {d}, {e});"
+            command = f"INSERT INTO course (id, class_name, teacher, class_time, class_room, credit) VALUES ( {a}, {b}, {c}, {d}, {e}, {credit});"
             cur.execute(command)
             conn.commit()
             # print新增成功的資料

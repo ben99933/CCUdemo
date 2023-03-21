@@ -1,4 +1,4 @@
-import { resetTable } from './init.js'
+import { resetTable , display_credit} from './init.js'
 
 const CHINESE_WORD_TO_NUMBER =
 {
@@ -230,6 +230,7 @@ export function newCourse()
 
 var searchBox = document.getElementById("search");
 var listBox = document.getElementById("list-box");
+let count_credit_button = document.getElementById("count_credit_button");
 var timer = null;
 var key = searchBox.value;
 
@@ -330,6 +331,7 @@ function search(){
                         temp.addEventListener('click', () => {
                             // console.log(temp.id);
                             let i = 0;
+                            // console.log(dict[temp.id])
                             let time = splittime(dict[temp.id].class_time)
                             for(let j = 0; j < time.length; j++){
                                 // 若有衝堂，則不加入，這裡對於一個課程有多個時間的情況，只要有一個時間衝堂，就不加入，
@@ -339,16 +341,39 @@ function search(){
                             }
                             for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
+                            let origin_credit = Number(localStorage.credit);
+                            origin_credit += Number(dict[temp.id].credit);
+                            localStorage.credit = origin_credit;
+                            display_credit();
                             listBox.innerHTML = "";
                             searchBox.value = "";
                         });
                     }
+                    if(data.length > 5){
+                        // let item = listBox.getElementsByTagName("li");
+                        listBox.style.height = "7rem";
+                    }else{
+                        listBox.style.height = "auto";
+                    }
                 };
+            }else{
+                listBox.style.height = "auto";
             }
         }
     }, 250);
 }
 
+count_credit_button.addEventListener('click', () => {
+    let dis = document.querySelectorAll("#credit_area");
+    let status = count_credit_button.checked;
+    if(status){
+        for(let i = 0; i < dis.length; i++)
+            dis[i].style.display = "block";
+    }else{
+        for(let i = 0; i < dis.length; i++)
+            dis[i].style.display = "none";
+    }
+});
 
 searchBox.addEventListener('input', () => {
     search();

@@ -235,7 +235,7 @@ export function resetTable()
 }
 
 export async function init()
-{
+{   
     let print = document.getElementById("print")
     var sel1 = document.getElementById("Select1");
     var tmp = "<option selected>星期</option>";
@@ -256,7 +256,6 @@ export async function init()
     for(var i = 65; i < 75; ++i)
     tmp += "<option value = '" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>";
     sel3.innerHTML = tmp;
-
     var isUsed = new Array(); 
     for(var i = 0; i < 6; ++i)
     { 
@@ -326,10 +325,18 @@ export async function init()
     }
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
         print.style.display = "none";
+    // 初始化設定學分數
+    display_credit();
+}
+
+export function display_credit(){
+    let dis_credit = document.querySelectorAll("#credit");
+    for(let i = 0; i < dis_credit.length; i++)
+        dis_credit[i].textContent = localStorage.credit;   
 }
 
 export function clear()
-{
+{   
     var e = document.querySelector("#accordion");
     e.innerHTML = ""
     if(e.style.display != "none")
@@ -357,10 +364,12 @@ export function clear()
             for(var j = start - 1; j < end; ++j)
                 storedUsed[day - 1][j] = false;
         }
-        var cou = []
+        var cou = [];
         localStorage.used = JSON.stringify(storedUsed);
         localStorage.removeItem("courses");
         localStorage.courses = JSON.stringify(cou);
         getCourse();
     }
+    localStorage.credit = 0;
+    display_credit();
 }
