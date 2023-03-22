@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="專屬於中正大學學生的排課系統——鳳梨課表">
+    <title>CCU Class Schedule</title>
+        <link rel = "stylesheet" href = "/css/tailwind.css">
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src = "https://www.googletagmanager.com/gtag/js?id=G-4V5KYBRM5L"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-4V5KYBRM5L');
+        </script>
+</head>
+<body>
+    <nav class = "bg-[#eacda3] text-black top-0 nav justify-center p-2 py-3 mt-0 w-full relative">
+        <div class = "nav justify-center">
+            <div class = 'flex justify-between items-center'>
+                <div class = 'flex items-center w-full md:w-4/12'>
+                    <img src = '/img/logo.png' class = 'h-10'>
+                </div>
+                <div class = 'right-0 hidden md:block'>
+                    <a class = "btn-head" href = "/index">回首頁</a>
+                    <a class = "btn-head mt-3" href = "/about">關於我們</a> 
+                </div>
+                <div class = 'block md:hidden'>
+                    <!-- navbar collapse icon -->
+                    <button type = 'button' class = 'py-2 px-2 rounded text-black' onclick = "collapse()">
+                        <svg xmlns = "http://www.w3.org/2000/svg" class = "h-6 w-6" fill = "none" viewBox = "0 0 24 24" stroke = "currentColor" stroke-width = "2">
+                            <path stroke-linecap = "round" stroke-linejoin = "round" d = "M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class = 'w-full bg-[#eacda3] collapse' id = 'mobile_menu'>
+        <div class = 'grid grid-cols-1 w-10/12 mx-auto text-white'>
+            <a class = "btn-head" href = "/index">回首頁</a>
+            <a class = "btn-head" href = "/about">關於我們</a>
+        </div>
+    </div>
+    <div class = 'w-full mx-auto py-6'>
+        <div class = 'w-11/12 md:w-7/12 mx-auto my-3'>
+            <div class = 'text-center text-3xl font-semibold border-b-2 mb-3'>
+                Error!
+            </div>
+            <div class = "text-center text-xl mx-auto">
+                <p>
+                    糟糕! 似乎出了一些問題。<br>
+                    請回首頁重新操作!
+                </p>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+    <div class = "bg-[#eacda3] py-3 w-full flex items-center">
+        <div class = 'text-center mx-auto'>© Pineapple Class Schedule 2023</div>
+    </div>
+</body>
+</body>
+</html>
