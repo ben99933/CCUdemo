@@ -1,4 +1,4 @@
-import { resetTable , display_credit} from './init.js'
+import { resetTable , display_credit, init} from './init.js'
 
 const CHINESE_WORD_TO_NUMBER =
 {
@@ -214,11 +214,20 @@ export function newCourse()
             var elem = document.getElementById("default")
             if(list.length === 1 && elem)
                 elem.parentNode.removeChild(elem);
-            $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            $('#accordion > tbody:last-child').append(`<tr data-id = "noauto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>刪除</button></td></tr>`);
             $("#accordion").show();
             courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+            if(localStorage.noauto !== undefined){
+                console.log("noauto");
+                let noauto = JSON.parse(localStorage.noauto);
+                noauto.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+                localStorage.noauto = JSON.stringify(noauto);
+            }else{
+                console.log("noautononono");
+                localStorage.noauto = JSON.stringify([{課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}}]);
+            }
             for(var i = startClass - 1; i < endClass; ++i)
                 isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
             localStorage.used = JSON.stringify(isUsed);
@@ -256,11 +265,8 @@ function push_to_table(start, end, className, classLocation, classDay){
     var elem = document.getElementById("default")
     if(list.length === 1 && elem)
         elem.parentNode.removeChild(elem);
-    $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-    </svg>刪除</button></td></tr>`);
-    $("#accordion").show();
     courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+    // console.log(courses);
     for(var i = startClass - 1; i < endClass; ++i)
         isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
     localStorage.used = JSON.stringify(isUsed);
@@ -271,7 +277,7 @@ function push_to_table(start, end, className, classLocation, classDay){
 
 
 
-function splittime(time){
+export function splittime(time){
     // 回傳值為二維陣列，為[][],內部陣列為[星期, 開始節次, 結束節次]
     let store = time.split(" ");
     store.splice(0,1);
@@ -291,6 +297,26 @@ function splittime(time){
 
 let dict = {};
 
+function storage(className, classLocation, classTime, credit){
+    if(localStorage.course_list !== undefined){
+        let course_list = JSON.parse(localStorage.course_list);
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
+        localStorage.course_list = JSON.stringify(course_list);
+    }else{
+        let course_list = [];
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
+        localStorage.course_list = JSON.stringify(course_list);
+    }
+}
+
+export function display_list(className, classLocation, classTime){
+    $('#accordion > tbody:last-child').append(`<tr data-id = "auto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classTime}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>刪除</button></td></tr>`);
+    $("#accordion").show();
+    // console.log("6666")
+}
+
 
 function search(){
     if(timer){
@@ -306,8 +332,8 @@ function search(){
                 xhr.responseType='json';
                 xhr.send();
                 xhr.onload = ()=>{
-                    let data = xhr.response.rows;
-                    //console.log(data);
+                    let data = xhr.response;
+                    // console.log(data)
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
                         // 以在li上面顯示的字串為key，將資料存入dict
@@ -339,6 +365,8 @@ function search(){
                                 // console.log(time[j][1], time[j][2], time[j][0]);
                                 if(!check(time[j][1], time[j][2], time[j][0])) return;
                             }
+                            display_list(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time);
+                            storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit);
                             for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
                             let origin_credit = Number(localStorage.credit);
@@ -347,6 +375,7 @@ function search(){
                             display_credit();
                             listBox.innerHTML = "";
                             searchBox.value = "";
+                            // init();
                         });
                     }
                     if(data.length > 5){
