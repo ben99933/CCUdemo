@@ -5,6 +5,7 @@ import mysql.connector
 import os
 import psycopg2
 import pandas as pd
+import urllib.parse as urlparse
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
@@ -19,13 +20,8 @@ try:
     #     passwd=os.getenv("MYSQL_PASSWORD"),
     #     db=os.getenv("MYSQL_DATABASE"),
     # )
-    conn = psycopg2.connect(
-        database=os.getenv("DATABASE_NAME"),
-        user=os.getenv("DATABASE_USER"),
-        password=os.getenv("DATABASE_PASSWORD"),
-        host=os.getenv("DATABASE_HOST"),
-        port=os.getenv("DATABASE_PORT")
-    )
+    
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode='require')
     cur = conn.cursor()
     # cur.execute("use ccu;")
 except Exception as ex:
