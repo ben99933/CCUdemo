@@ -333,7 +333,7 @@ function search(){
                 xhr.send();
                 xhr.onload = ()=>{
 
-                    let data = xhr.response;
+                    let data = xhr.response.rows;
 
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
@@ -376,6 +376,7 @@ function search(){
                             localStorage.credit = origin_credit;
                             display_credit();
                             listBox.innerHTML = "";
+                            listBox.style.height = "auto";
                             searchBox.value = "";
                             // init();
                             // 為了應付展開列表打不開的問題，所以在這裡重新整理頁面，但實在是太慢了，所以先註解掉
