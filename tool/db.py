@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import mysql.connector
 import os
 
-import psycopg2
 import pandas as pd
 import urllib.parse as urlparse
 
@@ -13,26 +12,20 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 # 根目錄的網址
 url1 = os.getenv("CCU_COURSE_URL")
-
+usingDB = os.getenv("USING_DATABASE")
 try:
-
-    # conn = mysql.connector.connect(
-    #     host=os.getenv("MYSQL_HOST"),
-    #     port=os.getenv("MYSQL_PORT"),
-    #     user=os.getenv("MYSQL_USER"),
-    #     passwd=os.getenv("MYSQL_PASSWORD"),
-    #     db=os.getenv("MYSQL_DATABASE"),
-    # )
-
-    # conn = mysql.connector.connect(
-    #     host=os.getenv("MYSQL_HOST"),
-    #     port=os.getenv("MYSQL_PORT"),
-    #     user=os.getenv("MYSQL_USER"),
-    #     passwd=os.getenv("MYSQL_PASSWORD"),
-    #     db=os.getenv("MYSQL_DATABASE"),
-    # )
-    
-    conn = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode='require')
+    conn = None
+    if(usingDB == "mysql"):
+        conn = mysql.connector.connect(
+            host=os.getenv("MYSQL_HOST"),
+            port=os.getenv("MYSQL_PORT"),
+            user=os.getenv("MYSQL_USER"),
+            passwd=os.getenv("MYSQL_PASSWORD"),
+            db=os.getenv("MYSQL_DATABASE"),
+        )
+    elif(usingDB == "postgres"):
+        import psycopg2
+        conn = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode='require')
 
     cur = conn.cursor()
     cur.execute("use ccu;")

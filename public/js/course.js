@@ -334,6 +334,11 @@ function search(){
                 xhr.onload = ()=>{
 
                     let data = xhr.response;
+                    if(data == null){
+                        console.log("data is null");
+                        return;
+                    }
+                    if(data.rows != undefined)data = data.rows;
 
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
@@ -345,7 +350,7 @@ function search(){
                         let class_room = data[i].class_room;
                         let credit = data[i].credit;
                         let displaystr = `[${id}] ${class_name}, ${teacher}, ${class_time}, ${class_room}`;
-                        console.log(`displaystr:${displaystr}`);
+                        //console.log(`displaystr:${displaystr}`);
                         // let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
                         // 用一個dict來存放顯示的字串與資料，以顯示的字串為key，資料為value
                         dict[displaystr] = data[i];
@@ -376,6 +381,7 @@ function search(){
                             localStorage.credit = origin_credit;
                             display_credit();
                             listBox.innerHTML = "";
+                            listBox.style.height = "auto";
                             searchBox.value = "";
                             // init();
                             // 為了應付展開列表打不開的問題，所以在這裡重新整理頁面，但實在是太慢了，所以先註解掉

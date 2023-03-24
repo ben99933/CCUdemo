@@ -3,12 +3,13 @@
 /**
  * Module dependencies.
  */
-
+require('dotenv').config();
 var app = require('../app');
 var debug = require('debug')('ccudemo:server');
 var http = require('http');
-var connection = require('../config/database');
-require('dotenv').config();
+const { exit } = require('process');
+var database = require('../config/database');
+
 
 /**
  * Get port from environment and store in Express.
@@ -27,9 +28,20 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+
 server.listen(port, ()=>{
-  connection.connect(()=>{
-    console.log('Database connected');
+  if(database == null){
+    database.log('Database Not connected');
+  }
+  database.connect((err)=>{
+    if(err){
+      
+      console.log(err);
+      return;
+    }else{
+      console.log('Database connected');
+    }
+    
   });  
   console.log('Server is running on port ' + port);
 });

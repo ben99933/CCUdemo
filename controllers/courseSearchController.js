@@ -1,4 +1,3 @@
-const database = require('../config/database');
 const model = require('../models/courseModel');
 
 const controller = {

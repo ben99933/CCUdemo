@@ -12,6 +12,7 @@ router.get('/', async function(req, res) {
   if(regex.checkChineseEnglishNum(keyword)==false){
     res.send(null);
   }else{
+    //console.log("keyword: "+keyword);
     var array = await controller.searchCourses(keyword);
     //console.log(array);
     res.send(array);
