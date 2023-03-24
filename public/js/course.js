@@ -333,8 +333,12 @@ function search(){
                 xhr.send();
                 xhr.onload = ()=>{
 
-                    let data = xhr.response.rows;
-
+                    let data = xhr.response;
+                    if(data == null){
+                        console.log("data is null");
+                        return;
+                    }
+                    console.log(data);
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
                         // 以在li上面顯示的字串為key，將資料存入dict
