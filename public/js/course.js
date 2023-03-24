@@ -297,7 +297,7 @@ export function splittime(time){
 
 let dict = {};
 
-function storage(className, classLocation, classTime, credit){
+function storage(className, classLocation, classTime, credit, id){
     if(localStorage.course_list !== undefined){
         let course_list = JSON.parse(localStorage.course_list);
         course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
@@ -389,9 +389,10 @@ function search(){
                         listBox.style.height = "auto";
                     }
                 };
-            }else{
-                listBox.style.height = "auto";
             }
+            // else{
+            //     listBox.style.height = "auto";
+            // }
         }
     }, 250);
 }

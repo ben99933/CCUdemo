@@ -360,6 +360,13 @@ export async function init()
 
 }
 
+window.onload = function(){
+    if(localStorage.credit === undefined){
+        localStorage.credit = 0;
+    }
+    display_credit();
+}
+
 export function display_credit(){
     let dis_credit = document.querySelectorAll("#credit");
     for(let i = 0; i < dis_credit.length; i++)

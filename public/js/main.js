@@ -157,6 +157,7 @@ init();
 function delete_display(target){
     var storedcourses = JSON.parse(localStorage.courses);
     var storedUsed = JSON.parse(localStorage.used);
+    console.log(storedUsed);
     for(var i = 0; i < storedcourses.length; i++)
     {   
         if(target.parentNode.parentNode.textContent.includes(storedcourses[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(storedcourses[i]['上課時間']['開始節次']));
