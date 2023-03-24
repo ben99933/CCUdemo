@@ -344,6 +344,7 @@ function search(){
                         let class_room = data[i].class_room;
                         let credit = data[i].credit;
                         let displaystr = `[${id}] ${class_name}, ${teacher}, ${class_time}, ${class_room}`;
+                        //console.log(`displaystr:${displaystr}`);
                         // let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
                         // 用一個dict來存放顯示的字串與資料，以顯示的字串為key，資料為value
                         dict[displaystr] = data[i];
