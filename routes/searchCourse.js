@@ -14,7 +14,7 @@ router.get('/', async function(req, res) {
   }else{
     //console.log("keyword: "+keyword);
     var array = await controller.searchCourses(keyword);
-    console.log(array);
+    //console.log(array);
     res.send(array);
   }
   

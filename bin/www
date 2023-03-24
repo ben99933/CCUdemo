@@ -8,18 +8,8 @@ var app = require('../app');
 var debug = require('debug')('ccudemo:server');
 var http = require('http');
 const { exit } = require('process');
+var database = require('../config/database');
 
-var connection = null;
-if(process.env.USING_DATABASE== "postgre"){
-  console.log("using postgre");
-  connection = require('../config/postgre');
-}else if(process.env.USING_DATABASE== "mysql"){
-  console.log("using mysql");
-  connection = require('../config/mysql');
-}else{
-  console.log("please choose a database!!");
-  exit();
-}
 
 /**
  * Get port from environment and store in Express.
@@ -40,12 +30,18 @@ var server = http.createServer(app);
 
 
 server.listen(port, ()=>{
-  if(connection == null){
-    console.log('Database Not connected');
+  if(database == null){
+    database.log('Database Not connected');
   }
-  connection.connect(()=>{
-    console.log('Database connected');
-    //console.log(connection);
+  database.connect((err)=>{
+    if(err){
+      
+      console.log(err);
+      return;
+    }else{
+      console.log('Database connected');
+    }
+    
   });  
   console.log('Server is running on port ' + port);
 });

@@ -1,4 +1,3 @@
-const database = require('../config/postgre');
 const model = require('../models/courseModel');
 
 const controller = {
