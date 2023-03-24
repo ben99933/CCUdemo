@@ -9,10 +9,9 @@ require('dotenv').config();
 //     password: process.env.DATABASE_PASSWORD,
 //     port: process.env.DATABASE_PORT
 // );
-const connection = new Pool({
+const connection = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
-
 
 module.exports = connection;

@@ -13,6 +13,7 @@ router.get('/', async function(req, res) {
     res.send(null);
   }else{
     var array = await controller.searchCourses(keyword);
+    //console.log(array);
     res.send(array);
   }
   
