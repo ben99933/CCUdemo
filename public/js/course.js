@@ -297,14 +297,17 @@ export function splittime(time){
 
 let dict = {};
 
-function storage(className, classLocation, classTime, credit, id){
+function storage(className, classLocation, classTime, credit, id, usetime){
+    console.log(className, classLocation, classTime, credit, id, usetime);
     if(localStorage.course_list !== undefined){
         let course_list = JSON.parse(localStorage.course_list);
-        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
+        console.log(usetime)
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit, 課表時間: usetime});
+        console.log(course_list);
         localStorage.course_list = JSON.stringify(course_list);
     }else{
         let course_list = [];
-        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit, 課表時間: usetime});
         localStorage.course_list = JSON.stringify(course_list);
     }
 }
@@ -317,6 +320,34 @@ export function display_list(className, classLocation, classTime){
     // console.log("6666")
 }
 
+
+// 讓每個顯示列的localstroage都有自己的課程時間，不要再用字串切割了
+function commit_used(time){
+    console.log(time);
+    let use = {};
+    for(let i = 0; i < time.length; i++){
+        let start = time[i][1];
+        let end = time[i][2];
+        let startClass = 0;
+        let endClass = 0;
+        if(start >= 'A' && end <= 'J')
+        {
+            startClass = 1 + (CLASS_MAP[start] - 1) * 3
+            endClass = 3 + (CLASS_MAP[end] - 1) * 3
+        }
+        else 
+        {
+            startClass = 1 + (CLASS_MAP[start] - 1) * 2
+            endClass = CLASS_MAP[end] * 2 
+        }
+        let classTime = [];
+        for(let i = startClass - 1; i < endClass; ++i)
+            classTime.push(i);
+        console.log(classTime);
+        use[CHINESE_WORD_TO_NUMBER[time[i][0]] - 1] = classTime;
+    }
+    return use;
+}
 
 function search(){
     if(timer){
@@ -373,13 +404,14 @@ function search(){
                                 if(!check(time[j][1], time[j][2], time[j][0])) return;
                             }
                             display_list(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time);
-                            storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit);
                             for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
                             let origin_credit = Number(localStorage.credit);
                             origin_credit += Number(dict[temp.id].credit);
                             localStorage.credit = origin_credit;
                             display_credit();
+                            let table_time = commit_used(time);
+                            storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit, 0, table_time);
                             listBox.innerHTML = "";
                             listBox.style.height = "auto";
                             searchBox.value = "";
@@ -396,9 +428,9 @@ function search(){
                     }
                 };
             }
-            // else{
-            //     listBox.style.height = "auto";
-            // }
+            else{
+                listBox.style.height = "0px";
+            }
         }
     }, 250);
 }

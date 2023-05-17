@@ -301,26 +301,27 @@ export async function init()
         var storedcourses = JSON.parse(localStorage.courses);
         if(storedcourses.length !== 0)
         {
-            for(var index = 0; index < storedcourses.length; index++)
-            {
-                let className = storedcourses[index]["課程名稱"]
-                let courseTime = storedcourses[index]["上課時間"]
-                let classLocation = storedcourses[index]["上課教室"]
-                let startClass = 0
-                let endClass = 0
-                if(courseTime["開始節次"] >= 'A' && courseTime["開始節次"] <= 'J')
-                {
-                    startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 3
-                    endClass = 3 + (CLASS_MAP[courseTime["結束節次"]] - 1) * 3
-                }
-                else 
-                {
-                    startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 2
-                    endClass = CLASS_MAP[courseTime["結束節次"]] * 2 
-                }
-                for(var i = startClass - 1; i < endClass; ++i)
-                    isUsed[CHINESE_WORD_TO_NUMBER[courseTime["星期"]] - 1][i] = true;
-            }
+            // for(var index = 0; index < storedcourses.length; index++)
+            // {
+            //     let className = storedcourses[index]["課程名稱"]
+            //     let courseTime = storedcourses[index]["上課時間"]
+            //     let classLocation = storedcourses[index]["上課教室"]
+            //     let startClass = 0
+            //     let endClass = 0
+            //     if(courseTime["開始節次"] >= 'A' && courseTime["開始節次"] <= 'J')
+            //     {
+            //         startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 3
+            //         endClass = 3 + (CLASS_MAP[courseTime["結束節次"]] - 1) * 3
+            //     }
+            //     else 
+            //     {
+            //         startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 2
+            //         endClass = CLASS_MAP[courseTime["結束節次"]] * 2 
+            //     }
+            //     for(var i = startClass - 1; i < endClass; ++i)
+            //         isUsed[CHINESE_WORD_TO_NUMBER[courseTime["星期"]] - 1][i] = true;
+            // }
+            console.log(isUsed)
             await resetTable()
             createCurriculum().then($("#curriculum").rowspanizer())
             $("#curriculum").show()

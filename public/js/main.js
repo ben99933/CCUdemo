@@ -155,34 +155,28 @@ init();
 // });
 
 function delete_display(target){
-    var storedcourses = JSON.parse(localStorage.courses);
+    var storedcourses = JSON.parse(localStorage.course_list);
     var storedUsed = JSON.parse(localStorage.used);
     console.log(storedUsed);
+    let t = target.parentNode.parentNode;
     for(var i = 0; i < storedcourses.length; i++)
     {   
-        if(target.parentNode.parentNode.textContent.includes(storedcourses[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(storedcourses[i]['上課時間']['開始節次']));
+        if(t.children[0].textContent == storedcourses[i]["課程名稱"] && t.children[1].textContent == storedcourses[i]['上課教室'] && t.children[2].textContent == storedcourses[i]['上課時間']);
         { 
-            let start = 0;
-            let end = 0;
-            let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
-            if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
-            {
-                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
-                end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
+            console.log(storedcourses[i]);
+            for(let key in storedcourses[i]['課表時間']){
+                for(let j = 0; j < storedcourses[i]['課表時間'][key].length; j++){
+                    storedUsed[key][storedcourses[i]['課表時間'][key][j]] = false;
+                }
             }
-            else 
-            {
-                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
-                end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
-            }
-            for(var j = start - 1; j < end; ++j)
-                storedUsed[day - 1][j] = false;
+            console.log(storedUsed);
+            localStorage.credit = Number(localStorage.credit) - Number(storedcourses[i]['學分數']);
             storedcourses.splice(i, 1);
             break;
         }
     }
     localStorage.used = JSON.stringify(storedUsed);
-    localStorage.courses = JSON.stringify(storedcourses);//done
+    localStorage.course_list = JSON.stringify(storedcourses);//done
 }
 
 document.querySelector('.coursesGroup').addEventListener('click', function(event)
@@ -190,24 +184,10 @@ document.querySelector('.coursesGroup').addEventListener('click', function(event
     const target = event.target;
     if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'auto')
     {   
-        let time = splittime(target.parentNode.parentNode.children[2].textContent);
-        for(let i = 0; i < time.length; ++i){
-            delete_display(target);
-        }
+        delete_display(target);
         let course_list = JSON.parse(localStorage.course_list);
-        for(let i = 0; i < course_list.length; ++i){
-            if(target.parentNode.parentNode.textContent.includes(course_list[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(course_list[i]['上課時間']));
-            {   
-                console.log(course_list[i]);
-                let num = Number(localStorage.credit);
-                num -= Number(course_list[i]['學分數']);
-                localStorage.credit = num;
-                course_list.splice(i, 1);
-                localStorage.course_list = JSON.stringify(course_list);
-                display_credit();
-                break;
-            }
-        }
+        display_credit();
+        
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
         getCourse();
