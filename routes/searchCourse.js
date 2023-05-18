@@ -8,7 +8,7 @@ router.get('/', async function(req, res) {
   //keyword可能還要經過處理，例如去除空白、轉小寫等等
   //keyword = keyword.trim().toLowerCase();
   console.log(`keyword=${keyword}`);
-  if(regex.checkChineseEnglishNum(keyword)==false)res.send(null);
+  //if(regex.checkChineseEnglishNum(keyword)==false)res.send(null);
   //=============讓controller幫我們查==========
   var array = await controller.searchCourses(keyword);
   //console.log(array);
