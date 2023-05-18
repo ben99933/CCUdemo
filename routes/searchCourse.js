@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/courseSearchController');
+const regex = require('../utils/myRegex');
 
 router.get('/', async function(req, res) {
   const keyword = req.query.keyword;
