@@ -307,6 +307,7 @@ function search(){
                 xhr.send();
                 xhr.onload = ()=>{
                     let data = xhr.response.rows;
+                    if(data.length == 0)return;
                     // console.log(data)
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
