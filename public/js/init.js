@@ -268,6 +268,31 @@ export async function init()
         var storedcourses = JSON.parse(localStorage.courses);
         if(storedcourses.length !== 0)
         {
+            // 檢查這個使用者的資料是否被強制更新過
+            if(storedcourses[0]["教師"] == undefined)
+            {
+                // 強制更新
+                let len = storedcourses.length
+                let newCourses = []
+                for(let i = 0; i < len; ++i)
+                {
+                    let course = storedcourses[i]
+                    let newCourse = {}
+                    newCourse["課程名稱"] = course["課程名稱"]
+                    newCourse["上課教室"] = course["上課教室"]
+                    newCourse["上課時間"] = {}
+                    newCourse["上課時間"]["星期"] = course["上課時間"]["星期"]
+                    newCourse["上課時間"]["開始節次"] = course["上課時間"]["開始節次"]
+                    newCourse["上課時間"]["結束節次"] = course["上課時間"]["結束節次"]
+                    newCourse["課程代碼"] = "HWORLD";
+                    newCourse["教師"] = "NULL";
+                    
+                    newCourses.push(newCourse)
+                }
+                localStorage.courses = JSON.stringify(newCourses);
+            } 
+            // 顯示課程資訊
+            storedcourses = JSON.parse(localStorage.courses);
             for(var index = 0; index < storedcourses.length; index++)
             {
                 let className = storedcourses[index]["課程名稱"]

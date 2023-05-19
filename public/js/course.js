@@ -218,7 +218,7 @@ export function newCourse()
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>刪除</button></td></tr>`);
             $("#accordion").show();
-            courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+            courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: "HWORLD", 教師: "NULL"});
             for(var i = startClass - 1; i < endClass; ++i)
                 isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
             localStorage.used = JSON.stringify(isUsed);
@@ -234,9 +234,9 @@ let count_credit_button = document.getElementById("count_credit_button");
 var timer = null;
 var key = searchBox.value;
 
-// 點擊提示框中的選項，下放到下方課表中，需傳入參數依序為：課程名稱、教室、星期、開始節次、結束節次
+// 點擊提示框中的選項，下放到下方課表中，需傳入參數依序為：課程名稱、教室、星期、開始節次、結束節次、課程編號、老師
 //插入成功返回1，失敗返回0
-function push_to_table(start, end, className, classLocation, classDay){
+function push_to_table(start, end, className, classLocation, classDay, classID, teacher){
     // console.log(start, end, className, classLocation, classDay);
     let startClass = start;
     let endClass = end;
@@ -260,7 +260,7 @@ function push_to_table(start, end, className, classLocation, classDay){
     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
     </svg>刪除</button></td></tr>`);
     $("#accordion").show();
-    courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
+    courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: classID, 教師: teacher});
     for(var i = startClass - 1; i < endClass; ++i)
         isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
     localStorage.used = JSON.stringify(isUsed);

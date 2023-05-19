@@ -163,9 +163,12 @@ document.querySelector('.coursesGroup').addEventListener('click', function(event
     {
         var storedcourses = JSON.parse(localStorage.courses);
         var storedUsed = JSON.parse(localStorage.used);
+        console.log(target.parentNode.parentNode.textContent);
         for(var i = 0; i < storedcourses.length; i++)
         {
-            if(target.parentNode.parentNode.textContent.includes(storedcourses[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(storedcourses[i]["上課時間"]["開始節次"]))
+            let temp = storedcourses[i]["課程名稱"]+storedcourses[i]["上課教室"]+storedcourses[i]["上課時間"]["星期"]+" "+storedcourses[i]["上課時間"]["開始節次"]+" ~ "+storedcourses[i]["上課時間"]["結束節次"];
+            // 要改成課程代碼+教授+教室+時間
+            if(target.parentNode.parentNode.textContent.includes(temp))
             { 
                 
                 let start = 0;
