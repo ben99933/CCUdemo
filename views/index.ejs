@@ -11,12 +11,6 @@
         <script async src = "https://www.googletagmanager.com/gtag/js?id=G-4V5KYBRM5L"></script>
         <script>
         window.dataLayer = window.dataLayer || [];
-        window.onload = function(){
-            if(localStorage.credit == undefined){
-                localStorage.credit = 0;
-            }
-            displayCredit();
-        }
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
@@ -165,11 +159,11 @@
                 <!-- Modal body -->
                 <div class="max-h-72 p-4">
                     歡迎您初次來到本站，目前我們提供之功能如下<br> 
-                    1.手動輸入課程資訊(可保存於同裝置之同一瀏覽器)<br>
+                    1.搜尋開課資訊<br>
                     2.產生對應之課表<br>
-                    3.下載課表圖檔(行動用戶則無此服務)<br>
-                    我們預計將在下個版本開放課程搜尋功能，<br>
-                    有任何問題歡迎透過關於頁面之回饋表單告知，<br>
+                    3.手動產生自定義課表<br>
+                    4.下載課表圖檔(行動用戶則無此服務)<br>
+                    有任何問題歡迎透過關於頁面之回饋表單告知<br>
                     鳳梨課表先在此感謝您的使用。
                 </div>
                 <!-- https://tailwindcomponents.com/component/simple-modal-1 -->

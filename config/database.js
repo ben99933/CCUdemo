@@ -1,17 +1,16 @@
-const mysql = require("mysql2");
-const { Pool, Client } = require('pg')
+//const mysql = require("mysql2");
 require('dotenv').config();
 
-// const connection = new Client(
-//     host: process.env.DATABASE_HOST,
-//     user: process.env.DATABASE_USER,
-//     database: process.env.DATABASE_NAME,
-//     password: process.env.DATABASE_PASSWORD,
-//     port: process.env.DATABASE_PORT
-// );
-const connection = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
-});
-
+var connection = null;
+if(process.env.USING_DATABASE== "postgre"){
+  console.log("using postgre");
+  connection = require('../config/postgreSQL');
+}else if(process.env.USING_DATABASE== "mysql"){
+  console.log("using mysql");
+  connection = require('../config/mysqlDB');
+}else{
+  console.log("please choose a database!!");
+  exit();
+  
+}
 module.exports = connection;
