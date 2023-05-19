@@ -396,17 +396,17 @@ function search(){
     }, 250);
 }
 
-count_credit_button.addEventListener('click', () => {
-    let dis = document.querySelectorAll("#credit_area");
-    let status = count_credit_button.checked;
-    if(status){
-        for(let i = 0; i < dis.length; i++)
-            dis[i].style.display = "block";
-    }else{
-        for(let i = 0; i < dis.length; i++)
-            dis[i].style.display = "none";
-    }
-});
+// count_credit_button.addEventListener('click', () => {
+//     let dis = document.querySelectorAll("#credit_area");
+//     let status = count_credit_button.checked;
+//     if(status){
+//         for(let i = 0; i < dis.length; i++)
+//             dis[i].style.display = "block";
+//     }else{
+//         for(let i = 0; i < dis.length; i++)
+//             dis[i].style.display = "none";
+//     }
+// });
 
 searchBox.addEventListener('input', () => {
     search();
