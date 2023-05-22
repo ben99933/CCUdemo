@@ -182,36 +182,39 @@ function delete_display(target, mode){
         localStorage.course_list = JSON.stringify(course_list);//done
     }
     else if(mode == 'noauto'){
-        var course_list = JSON.parse(localStorage.course_list);
-        console.log(course_list);
-        var storedUsed = JSON.parse(localStorage.used);
-        for(var i = 0; i < course_list.length; i++)
-        {   
-            let display_text = target.parentNode.parentNode.textContent;
-            if(display_text.includes(course_list[i]["課程名稱"]) && display_text.includes(course_list[i]['顯示上課時間']));
-            { 
-                let start = 0;
-                let end = 0;
-                for(let j = 0; j < course_list[i]['上課時間'].length; ++j){
-                    for(let k = 0; k < course_list[i]['上課時間'][j]['time'].length; ++k){
-                        storedUsed[course_list[i]['上課時間'][j]['day'] - 1][course_list[i]['上課時間'][j]['time'][k]] = false;
-                    }
-                }
-                let credit = Number(localStorage.credit);
-                credit -= Number(course_list[i]['學分數']);
-                localStorage.credit = credit;
-                course_list.splice(i, 1);
-                break;
-            }
-        }
-        localStorage.used = JSON.stringify(storedUsed);
-        localStorage.course_list = JSON.stringify(course_list);//done
+        // 有bug，全都為auto
+        console.log('noauto');
+        // var course_list = JSON.parse(localStorage.course_list);
+        // console.log(course_list);
+        // var storedUsed = JSON.parse(localStorage.used);
+        // for(var i = 0; i < course_list.length; i++)
+        // {   
+        //     let display_text = target.parentNode.parentNode.textContent;
+        //     if(display_text.includes(course_list[i]["課程名稱"]) && display_text.includes(course_list[i]['顯示上課時間']));
+        //     { 
+        //         let start = 0;
+        //         let end = 0;
+        //         for(let j = 0; j < course_list[i]['上課時間'].length; ++j){
+        //             for(let k = 0; k < course_list[i]['上課時間'][j]['time'].length; ++k){
+        //                 storedUsed[course_list[i]['上課時間'][j]['day'] - 1][course_list[i]['上課時間'][j]['time'][k]] = false;
+        //             }
+        //         }
+        //         let credit = Number(localStorage.credit);
+        //         credit -= Number(course_list[i]['學分數']);
+        //         localStorage.credit = credit;
+        //         course_list.splice(i, 1);
+        //         break;
+        //     }
+        // }
+        // localStorage.used = JSON.stringify(storedUsed);
+        // localStorage.course_list = JSON.stringify(course_list);//done
     }
 }
 
 document.querySelector('.coursesGroup').addEventListener('click', function(event)
 {
     const target = event.target;
+    // 目前這裡有bug，不論是手動還是自動加入的課程，都是id為auto
     if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'auto')
     {   
         delete_display(target, 'auto');
@@ -221,6 +224,7 @@ document.querySelector('.coursesGroup').addEventListener('click', function(event
         getCourse();
     }else if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'noauto'){
         delete_display(target, 'noauto');
+        console.log('noauto');
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
         getCourse();
