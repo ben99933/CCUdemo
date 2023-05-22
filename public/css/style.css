@@ -22,11 +22,11 @@ td
 {
     @apply hover:text-red-400 duration-500;
 }
-.collapse
+.listcollapse
 {
     @apply h-0 transition duration-500 opacity-0 overflow-hidden ease-out;
 }
-.collapse.active
+.listcollapse.active
 {
     @apply opacity-100 h-auto block py-3 md:hidden; 
 }

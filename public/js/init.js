@@ -263,65 +263,31 @@ export async function init()
         for(var j = 0; j < 30; ++j)
             isUsed[i][j] = false;
     }
-    if(localStorage.course_list !== undefined){
-        let course_list = JSON.parse(localStorage.course_list);
-        console.log(course_list)
-        if(course_list.length !== 0){
-            for(let i = 0; i < course_list.length; ++i){
-                let className = course_list[i]['課程名稱'];
-                let classLocation = course_list[i]['上課教室'];
-                let classTime = course_list[i]['上課時間'];
-                console.log(className, classLocation, classTime)
-                $('#accordion > tbody:last-child').append(`<tr data-id = "auto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classTime}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>刪除</button></td></tr>`);
-                $("#accordion").show();
-            }
-        }
-    }
-    if(localStorage.noauto !== undefined){
-        let noauto = JSON.parse(localStorage.noauto);
-        if(noauto.length !== 0){
-            for(let i = 0; i < noauto.length; i++){
-                console.log(noauto[i])
-                let className = noauto[i]['課程名稱'];
-                let classLocation = noauto[i]['上課教室'];
-                let classDay = noauto[i]['上課時間']['星期'];
-                let start = noauto[i]['上課時間']['開始節次'];
-                let end = noauto[i]['上課時間']['結束節次'];
-                $('#accordion > tbody:last-child').append(`<tr data-id = "noauto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>刪除</button></td></tr>`);
-                $("#accordion").show();
-            }
-        }
-    }
     if(localStorage.courses !== undefined)
     {     
         var storedcourses = JSON.parse(localStorage.courses);
         if(storedcourses.length !== 0)
         {
-            // for(var index = 0; index < storedcourses.length; index++)
-            // {
-            //     let className = storedcourses[index]["課程名稱"]
-            //     let courseTime = storedcourses[index]["上課時間"]
-            //     let classLocation = storedcourses[index]["上課教室"]
-            //     let startClass = 0
-            //     let endClass = 0
-            //     if(courseTime["開始節次"] >= 'A' && courseTime["開始節次"] <= 'J')
-            //     {
-            //         startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 3
-            //         endClass = 3 + (CLASS_MAP[courseTime["結束節次"]] - 1) * 3
-            //     }
-            //     else 
-            //     {
-            //         startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 2
-            //         endClass = CLASS_MAP[courseTime["結束節次"]] * 2 
-            //     }
-            //     for(var i = startClass - 1; i < endClass; ++i)
-            //         isUsed[CHINESE_WORD_TO_NUMBER[courseTime["星期"]] - 1][i] = true;
-            // }
-            console.log(isUsed)
+            for(var index = 0; index < storedcourses.length; index++)
+            {
+                let className = storedcourses[index]["課程名稱"]
+                let courseTime = storedcourses[index]["上課時間"]
+                let classLocation = storedcourses[index]["上課教室"]
+                let startClass = 0
+                let endClass = 0
+                if(courseTime["開始節次"] >= 'A' && courseTime["開始節次"] <= 'J')
+                {
+                    startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 3
+                    endClass = 3 + (CLASS_MAP[courseTime["結束節次"]] - 1) * 3
+                }
+                else 
+                {
+                    startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 2
+                    endClass = CLASS_MAP[courseTime["結束節次"]] * 2 
+                }
+                for(var i = startClass - 1; i < endClass; ++i)
+                    isUsed[CHINESE_WORD_TO_NUMBER[courseTime["星期"]] - 1][i] = true;
+            }
             await resetTable()
             createCurriculum().then($("#curriculum").rowspanizer())
             $("#curriculum").show()
@@ -357,8 +323,6 @@ export async function init()
         print.style.display = "none";
     // 初始化設定學分數
     display_credit();
-    // 初始化課程列表
-
 }
 
 window.onload = function(){
@@ -409,8 +373,6 @@ export function clear()
         localStorage.courses = JSON.stringify(cou);
         getCourse();
     }
-    localStorage.course_list = JSON.stringify([]);
-    localStorage.noauto = JSON.stringify([]);
     localStorage.credit = 0;
     display_credit();
 }

@@ -1,4 +1,4 @@
-import { resetTable , display_credit, init} from './init.js'
+import { resetTable , display_credit} from './init.js'
 
 const CHINESE_WORD_TO_NUMBER =
 {
@@ -214,20 +214,11 @@ export function newCourse()
             var elem = document.getElementById("default")
             if(list.length === 1 && elem)
                 elem.parentNode.removeChild(elem);
-            $('#accordion > tbody:last-child').append(`<tr data-id = "noauto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>刪除</button></td></tr>`);
             $("#accordion").show();
-            courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
-            if(localStorage.noauto !== undefined){
-                console.log("noauto");
-                let noauto = JSON.parse(localStorage.noauto);
-                noauto.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
-                localStorage.noauto = JSON.stringify(noauto);
-            }else{
-                console.log("noautononono");
-                localStorage.noauto = JSON.stringify([{課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}}]);
-            }
+            courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: "HWORLD", 教師: "NULL"});
             for(var i = startClass - 1; i < endClass; ++i)
                 isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
             localStorage.used = JSON.stringify(isUsed);
@@ -243,9 +234,9 @@ let count_credit_button = document.getElementById("count_credit_button");
 var timer = null;
 var key = searchBox.value;
 
-// 點擊提示框中的選項，下放到下方課表中，需傳入參數依序為：課程名稱、教室、星期、開始節次、結束節次
+// 點擊提示框中的選項，下放到下方課表中，需傳入參數依序為：課程名稱、教室、星期、開始節次、結束節次、課程編號、老師
 //插入成功返回1，失敗返回0
-function push_to_table(start, end, className, classLocation, classDay){
+function push_to_table(start, end, className, classLocation, classDay, classID, teacher){
     // console.log(start, end, className, classLocation, classDay);
     let startClass = start;
     let endClass = end;
@@ -265,8 +256,11 @@ function push_to_table(start, end, className, classLocation, classDay){
     var elem = document.getElementById("default")
     if(list.length === 1 && elem)
         elem.parentNode.removeChild(elem);
-    courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}});
-    // console.log(courses);
+    $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>刪除</button></td></tr>`);
+    $("#accordion").show();
+    courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: classID, 教師: teacher});
     for(var i = startClass - 1; i < endClass; ++i)
         isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
     localStorage.used = JSON.stringify(isUsed);
@@ -277,7 +271,7 @@ function push_to_table(start, end, className, classLocation, classDay){
 
 
 
-export function splittime(time){
+function splittime(time){
     // 回傳值為二維陣列，為[][],內部陣列為[星期, 開始節次, 結束節次]
     let store = time.split(" ");
     store.splice(0,1);
@@ -297,17 +291,14 @@ export function splittime(time){
 
 let dict = {};
 
-function storage(className, classLocation, classTime, credit, id, usetime){
-    console.log(className, classLocation, classTime, credit, id, usetime);
+function storage(className, classLocation, classTime, credit){
     if(localStorage.course_list !== undefined){
         let course_list = JSON.parse(localStorage.course_list);
-        console.log(usetime)
-        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit, 課表時間: usetime});
-        console.log(course_list);
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
         localStorage.course_list = JSON.stringify(course_list);
     }else{
         let course_list = [];
-        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit, 課表時間: usetime});
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
         localStorage.course_list = JSON.stringify(course_list);
     }
 }
@@ -363,26 +354,15 @@ function search(){
                 xhr.responseType='json';
                 xhr.send();
                 xhr.onload = ()=>{
-
-                    let data = xhr.response;
-                    if(data == null){
-                        console.log("data is null");
-                        return;
-                    }
-                    if(data.rows != undefined)data = data.rows;
-
+                    let response = xhr.response;
+                    if(response == null)return;
+                    let data = response.rows;
+                    if(data == null || data.length == 0)return;
+                    // console.log(data)
                     for(var i = 0; i < data.length; i++){
                         if(data[i]==undefined)continue;
                         // 以在li上面顯示的字串為key，將資料存入dict
-                        let id = data[i].id;
-                        let class_name = data[i].class_name;
-                        let teacher = data[i].teacher;
-                        let class_time = data[i].class_time;
-                        let class_room = data[i].class_room;
-                        let credit = data[i].credit;
-                        let displaystr = `[${id}] ${class_name}, ${teacher}, ${class_time}, ${class_room}`;
-                        //console.log(`displaystr:${displaystr}`);
-                        // let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
+                        let displaystr = '[' + data[i].id + '] ' + data[i].class_name + ', ' + data[i].teacher + ', ' + data[i].class_time + ', ' + data[i].class_room;
                         // 用一個dict來存放顯示的字串與資料，以顯示的字串為key，資料為value
                         dict[displaystr] = data[i];
                         var li = document.createElement("li");
@@ -404,6 +384,7 @@ function search(){
                                 if(!check(time[j][1], time[j][2], time[j][0])) return;
                             }
                             display_list(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time);
+                            storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit);
                             for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
                             let origin_credit = Number(localStorage.credit);
@@ -413,11 +394,7 @@ function search(){
                             let table_time = commit_used(time);
                             storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit, 0, table_time);
                             listBox.innerHTML = "";
-                            listBox.style.height = "auto";
                             searchBox.value = "";
-                            // init();
-                            // 為了應付展開列表打不開的問題，所以在這裡重新整理頁面，但實在是太慢了，所以先註解掉
-                            // location.reload();
                         });
                     }
                     if(data.length > 5){
@@ -435,17 +412,17 @@ function search(){
     }, 250);
 }
 
-count_credit_button.addEventListener('click', () => {
-    let dis = document.querySelectorAll("#credit_area");
-    let status = count_credit_button.checked;
-    if(status){
-        for(let i = 0; i < dis.length; i++)
-            dis[i].style.display = "block";
-    }else{
-        for(let i = 0; i < dis.length; i++)
-            dis[i].style.display = "none";
-    }
-});
+// count_credit_button.addEventListener('click', () => {
+//     let dis = document.querySelectorAll("#credit_area");
+//     let status = count_credit_button.checked;
+//     if(status){
+//         for(let i = 0; i < dis.length; i++)
+//             dis[i].style.display = "block";
+//     }else{
+//         for(let i = 0; i < dis.length; i++)
+//             dis[i].style.display = "none";
+//     }
+// });
 
 searchBox.addEventListener('input', () => {
     search();

@@ -1,5 +1,5 @@
-import { init, clear , display_credit} from "./init.js"
-import { getCourse, newCourse, splittime } from "./course.js"
+import { init, clear } from "./init.js"
+import { getCourse, newCourse } from "./course.js"
 
 const PLACES_TO_NUMBER = 
 {
@@ -155,28 +155,33 @@ init();
 // });
 
 function delete_display(target){
-    var storedcourses = JSON.parse(localStorage.course_list);
+    var storedcourses = JSON.parse(localStorage.courses);
     var storedUsed = JSON.parse(localStorage.used);
-    console.log(storedUsed);
-    let t = target.parentNode.parentNode;
     for(var i = 0; i < storedcourses.length; i++)
     {   
-        if(t.children[0].textContent == storedcourses[i]["課程名稱"] && t.children[1].textContent == storedcourses[i]['上課教室'] && t.children[2].textContent == storedcourses[i]['上課時間']);
+        if(target.parentNode.parentNode.textContent.includes(storedcourses[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(storedcourses[i]['上課時間']['開始節次']));
         { 
-            console.log(storedcourses[i]);
-            for(let key in storedcourses[i]['課表時間']){
-                for(let j = 0; j < storedcourses[i]['課表時間'][key].length; j++){
-                    storedUsed[key][storedcourses[i]['課表時間'][key][j]] = false;
-                }
+            let start = 0;
+            let end = 0;
+            let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
+            if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
+            {
+                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
+                end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
             }
-            console.log(storedUsed);
-            localStorage.credit = Number(localStorage.credit) - Number(storedcourses[i]['學分數']);
+            else 
+            {
+                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
+                end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
+            }
+            for(var j = start - 1; j < end; ++j)
+                storedUsed[day - 1][j] = false;
             storedcourses.splice(i, 1);
             break;
         }
     }
     localStorage.used = JSON.stringify(storedUsed);
-    localStorage.course_list = JSON.stringify(storedcourses);//done
+    localStorage.courses = JSON.stringify(storedcourses);//done
 }
 
 document.querySelector('.coursesGroup').addEventListener('click', function(event)
@@ -184,19 +189,36 @@ document.querySelector('.coursesGroup').addEventListener('click', function(event
     const target = event.target;
     if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'auto')
     {   
-        delete_display(target);
+        let time = splittime(target.parentNode.parentNode.children[2].textContent);
+        for(let i = 0; i < time.length; ++i){
+            delete_display(target);
+        }
         let course_list = JSON.parse(localStorage.course_list);
-        display_credit();
-        
+        for(let i = 0; i < course_list.length; ++i){
+            if(target.parentNode.parentNode.textContent.includes(course_list[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(course_list[i]['上課時間']));
+            {   
+                console.log(course_list[i]);
+                let num = Number(localStorage.credit);
+                num -= Number(course_list[i]['學分數']);
+                localStorage.credit = num;
+                course_list.splice(i, 1);
+                localStorage.course_list = JSON.stringify(course_list);
+                display_credit();
+                break;
+            }
+        }
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
         getCourse();
     }else if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'noauto'){
         var storedcourses = JSON.parse(localStorage.courses);
         var storedUsed = JSON.parse(localStorage.used);
+        console.log(target.parentNode.parentNode.textContent);
         for(var i = 0; i < storedcourses.length; i++)
         {
-            if(target.parentNode.parentNode.textContent.includes(storedcourses[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(storedcourses[i]["上課時間"]["開始節次"]))
+            let temp = storedcourses[i]["課程名稱"]+storedcourses[i]["上課教室"]+storedcourses[i]["上課時間"]["星期"]+" "+storedcourses[i]["上課時間"]["開始節次"]+" ~ "+storedcourses[i]["上課時間"]["結束節次"];
+            // 要改成課程代碼+教授+教室+時間
+            if(target.parentNode.parentNode.textContent.includes(temp))
             { 
                 
                 let start = 0;
@@ -215,7 +237,6 @@ document.querySelector('.coursesGroup').addEventListener('click', function(event
                 for(var j = start - 1; j < end; ++j)
                     storedUsed[day - 1][j] = false;
                 storedcourses.splice(i, 1);
-                console.log("delete");
                 break;
             }
         }

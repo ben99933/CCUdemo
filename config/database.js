@@ -1,3 +1,6 @@
+var mysql = require('../config/mysqlDB');
+var postgre = require('../config/postgreSQL');
+
 var connection = null;
 if(process.env.USING_DATABASE== "postgre"){
   console.log("using postgre");
@@ -7,7 +10,7 @@ if(process.env.USING_DATABASE== "postgre"){
   connection = require('../config/mysqlDB');
 }else{
   console.log("please choose a database!!");
-  exit();
+  // exit();
+  
 }
-
 module.exports = connection;

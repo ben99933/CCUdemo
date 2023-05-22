@@ -1,18 +1,23 @@
-from funcion import get_table_data
-from funcion import get_a_link
-from dotenv import load_dotenv
 import mysql.connector
 import os
 
+import psycopg2
 import pandas as pd
 import urllib.parse as urlparse
+
+from funcion import get_table_data
+from funcion import get_a_link
+from dotenv import load_dotenv
 
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
+
+
 # 根目錄的網址
 url1 = os.getenv("CCU_COURSE_URL")
 usingDB = os.getenv("USING_DATABASE")
+
 try:
     conn = None
     if(usingDB == "mysql"):
@@ -24,11 +29,10 @@ try:
             db=os.getenv("MYSQL_DATABASE"),
         )
     elif(usingDB == "postgres"):
-        import psycopg2
         conn = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode='require')
-
     cur = conn.cursor()
-    cur.execute("use ccu;")
+    if(usingDB == "mysql"):
+        cur.execute("use ccu;")
 except Exception as ex:
     print("connect error",end=" ")
     print(ex)
