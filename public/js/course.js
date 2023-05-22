@@ -83,47 +83,40 @@ export function createCurriculum()
 {
     return new Promise((resolve, reject) => {
         let rows = $("#curriculum > tbody > tr").get();
-        var storedcourses = JSON.parse(localStorage.courses);
+        if(localStorage.course_list === undefined) return;
+        var storedcourses = JSON.parse(localStorage.course_list);
         for(var index = 0; index < storedcourses.length; index++)
-        {
-            let courseName = storedcourses[index]["課程名稱"]
-            let courseTime = storedcourses[index]["上課時間"]
-            let courseClassroom = storedcourses[index]["上課教室"]
-            let day = CHINESE_WORD_TO_NUMBER[courseTime["星期"]]
-            let startClass = 0
-            let endClass = 0
-            let startTime = CLASS_TO_TIME[courseTime["開始節次"]];
-            if(courseTime["開始節次"] >= 'A' && courseTime["開始節次"] <= 'J')
-            {
-                startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 3
-                endClass = 3 + (CLASS_MAP[courseTime["結束節次"]] - 1) * 3
-            }
-            else 
-            {
-                startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 2
-                endClass = CLASS_MAP[courseTime["結束節次"]] * 2 
-            }
-            for(let i = startClass; i <= endClass; ++i)
-            {
-                var tds = $(rows[i]).children('td')
-                $(tds[day + 2]).append(`<div class = "course-time">${startTime}</div>`)
-                if(courseName.length > 8)
-                {
-                    var tmp = "";
-                    var len = courseName.length;
-                    let j = 0;
-                    while(len > 0)
+        {   
+            let time = splittime(storedcourses[index]["顯示上課時間"]);
+            for(let i = 0; i < storedcourses[index]["上課時間"].length; ++i){
+                let courseName = storedcourses[index]["課程名稱"];
+                let courseClassroom = storedcourses[index]["上課教室"];
+                let day = storedcourses[index]["上課時間"][i]["day"];
+                let startClass = storedcourses[index]["上課時間"][i]["time"][0] + 1;
+                let endClass = storedcourses[index]["上課時間"][i]["time"][storedcourses[index]["上課時間"][i]["time"].length - 1] + 1;
+                let startTime = CLASS_TO_TIME[time[i][1]];
+                for(let i = startClass; i <= endClass; ++i)
+                {   
+                    var tds = $(rows[i]).children('td')
+                    $(tds[day + 2]).append(`<div class = "course-time">${startTime}</div>`)
+                    if(courseName.length > 8)
                     {
-                        tmp += courseName.substring(0 + (j * 8), 8 + j * 8) + "<br>"
-                        j++;
-                        len -= 8;
+                        var tmp = "";
+                        var len = courseName.length;
+                        let j = 0;
+                        while(len > 0)
+                        {
+                            tmp += courseName.substring(0 + (j * 8), 8 + j * 8) + "<br>"
+                            j++;
+                            len -= 8;
+                        }
+                        $(tds[day + 2]).append(`<div class = "course-name break-words">${tmp}</div>`);
                     }
-                    $(tds[day + 2]).append(`<div class = "course-name break-words">${tmp}</div>`)
+                    else
+                        $(tds[day + 2]).append(`<div class = "course-name">${courseName}</div>`)
+                    $(tds[day + 2]).append(`<div class = "course-classroom">${courseClassroom}</div>`)
+                    $(tds[day + 2]).addClass('used-td')
                 }
-                else
-                    $(tds[day + 2]).append(`<div class = "course-name">${courseName}</div>`)
-                $(tds[day + 2]).append(`<div class = "course-classroom">${courseClassroom}</div>`)
-                $(tds[day + 2]).addClass('used-td')
             }
         }
         resolve(1);
@@ -198,31 +191,23 @@ export function newCourse()
         let endClass = 0;
         if(check(start, end, classDay))
         {   
-            if(start >= 'A' && end <= 'J')
-            {
-                startClass = 1 + (CLASS_MAP[start] - 1) * 3
-                endClass = 3 + (CLASS_MAP[end] - 1) * 3
+            console.log(start, end);
+            let str = ' ' + classDay + String(start);
+            console.log(start, end);
+            startClass = Number(start) + 1;
+            endClass = Number(end);
+            console.log(startClass, endClass);
+            for(let j = Number(startClass); j <= Number(endClass); j++){
+                str = str + "," + String(j);
             }
-            else 
-            {
-                startClass = 1 + (CLASS_MAP[start] - 1) * 2
-                endClass = CLASS_MAP[end] * 2 
-            }
-            let list = $("#accordion").get();
-            var isUsed = JSON.parse(localStorage.used);
-            var courses = JSON.parse(localStorage.courses);
-            var elem = document.getElementById("default")
-            if(list.length === 1 && elem)
-                elem.parentNode.removeChild(elem);
-            $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>刪除</button></td></tr>`);
-            $("#accordion").show();
-            courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: "HWORLD", 教師: "NULL"});
+            display_list(className, classLocation, str);
+            let dstime = splittime(str);
+            dstime = commit_used(dstime);
+            storage(className, classLocation, dstime, 0, str);
+            let isUsed = JSON.parse(localStorage.used);
             for(var i = startClass - 1; i < endClass; ++i)
                 isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
             localStorage.used = JSON.stringify(isUsed);
-            localStorage.courses = JSON.stringify(courses);
             getCourse();
         }
     }
@@ -250,17 +235,16 @@ function push_to_table(start, end, className, classLocation, classDay, classID, 
         startClass = 1 + (CLASS_MAP[start] - 1) * 2
         endClass = CLASS_MAP[end] * 2 
     }
-    let list = $("#accordion").get();
+    // let list = $("#accordion").get();
+    // console.log(list);
     var isUsed = JSON.parse(localStorage.used);
     var courses = JSON.parse(localStorage.courses);
-    var elem = document.getElementById("default")
-    if(list.length === 1 && elem)
-        elem.parentNode.removeChild(elem);
-    $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-    </svg>刪除</button></td></tr>`);
-    $("#accordion").show();
-    courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: classID, 教師: teacher});
+    // $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classDay} ${start} ~ ${end}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    // <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    // </svg>刪除</button></td></tr>`);
+    // $("#accordion").show();
+    // console.log(63522);
+    // courses.push({課程名稱: className, 上課教室: classLocation, 上課時間: {星期: classDay, 開始節次: start, 結束節次: end}, 課程代碼: classID, 教師: teacher});
     for(var i = startClass - 1; i < endClass; ++i)
         isUsed[CHINESE_WORD_TO_NUMBER[classDay] - 1][i] = true;
     localStorage.used = JSON.stringify(isUsed);
@@ -271,7 +255,8 @@ function push_to_table(start, end, className, classLocation, classDay, classID, 
 
 
 
-function splittime(time){
+export function splittime(time){
+    console.log(time);
     // 回傳值為二維陣列，為[][],內部陣列為[星期, 開始節次, 結束節次]
     let store = time.split(" ");
     store.splice(0,1);
@@ -291,31 +276,38 @@ function splittime(time){
 
 let dict = {};
 
-function storage(className, classLocation, classTime, credit){
+function storage(className, classLocation, classTime, credit, displayclasstime){
+    // 上方的課程列表，存入localStorage
     if(localStorage.course_list !== undefined){
         let course_list = JSON.parse(localStorage.course_list);
-        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit, 顯示上課時間: displayclasstime});
         localStorage.course_list = JSON.stringify(course_list);
     }else{
         let course_list = [];
-        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit});
+        course_list.push({課程名稱: className, 上課教室: classLocation, 上課時間: classTime, 學分數: credit, 顯示上課時間: displayclasstime});
         localStorage.course_list = JSON.stringify(course_list);
     }
 }
 
 export function display_list(className, classLocation, classTime){
-    $('#accordion > tbody:last-child').append(`<tr data-id = "auto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classTime}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    let list = $('#accordion').get();
+    const elem = document.getElementById("default")
+    if(list.length === 1 && elem){
+        let father = elem.parentNode;
+        father.removeChild(elem);
+    }
+    $('#accordion').append(`<tr data-id = "auto"><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${classTime}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
     </svg>刪除</button></td></tr>`);
     $("#accordion").show();
-    // console.log("6666")
+    return;
 }
 
 
 // 讓每個顯示列的localstroage都有自己的課程時間，不要再用字串切割了
 function commit_used(time){
     console.log(time);
-    let use = {};
+    let use = [];
     for(let i = 0; i < time.length; i++){
         let start = time[i][1];
         let end = time[i][2];
@@ -334,8 +326,11 @@ function commit_used(time){
         let classTime = [];
         for(let i = startClass - 1; i < endClass; ++i)
             classTime.push(i);
+        let obj = {};
+        obj["day"] = CHINESE_WORD_TO_NUMBER[time[i][0]];
+        obj["time"] = classTime;
         console.log(classTime);
-        use[CHINESE_WORD_TO_NUMBER[time[i][0]] - 1] = classTime;
+        use.push(obj);
     }
     return use;
 }
@@ -347,6 +342,7 @@ function search(){
     timer = setTimeout(()=>{
         if(key != searchBox.value){
             key = searchBox.value;
+            // console.log(localStorage);
             listBox.innerHTML = "";
             if(key != ""){
                 var xhr = new XMLHttpRequest();
@@ -356,7 +352,7 @@ function search(){
                 xhr.onload = ()=>{
                     let response = xhr.response;
                     if(response == null)return;
-                    let data = response.rows;
+                    let data = response;
                     if(data == null || data.length == 0)return;
                     // console.log(data)
                     for(var i = 0; i < data.length; i++){
@@ -376,15 +372,17 @@ function search(){
                             // console.log(temp.id);
                             let i = 0;
                             // console.log(dict[temp.id])
-                            let time = splittime(dict[temp.id].class_time)
+                            let time = splittime(dict[temp.id].class_time);
+                            console.log(time);
                             for(let j = 0; j < time.length; j++){
                                 // 若有衝堂，則不加入，這裡對於一個課程有多個時間的情況，只要有一個時間衝堂，就不加入，
                                 // 不然若兩個時間都衝堂，會導致一個課程被加入兩次，會跳出兩次課程衝堂的警告
                                 // console.log(time[j][1], time[j][2], time[j][0]);
                                 if(!check(time[j][1], time[j][2], time[j][0])) return;
                             }
+                            console.log(dict[temp.id].class_time);
                             display_list(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time);
-                            storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit);
+                            // storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit);
                             for(let j = 0; j < time.length; j++)
                                 if(!push_to_table(time[j][1], time[j][2], dict[temp.id].class_name, dict[temp.id].class_room, time[j][0])) break;
                             let origin_credit = Number(localStorage.credit);
@@ -392,7 +390,9 @@ function search(){
                             localStorage.credit = origin_credit;
                             display_credit();
                             let table_time = commit_used(time);
-                            storage(dict[temp.id].class_name, dict[temp.id].class_room, dict[temp.id].class_time, dict[temp.id].credit, 0, table_time);
+                            console.log(table_time);
+                            storage(dict[temp.id].class_name, dict[temp.id].class_room, table_time, dict[temp.id].credit, dict[temp.id].class_time);
+                            getCourse();
                             listBox.innerHTML = "";
                             searchBox.value = "";
                         });
@@ -412,17 +412,17 @@ function search(){
     }, 250);
 }
 
-// count_credit_button.addEventListener('click', () => {
-//     let dis = document.querySelectorAll("#credit_area");
-//     let status = count_credit_button.checked;
-//     if(status){
-//         for(let i = 0; i < dis.length; i++)
-//             dis[i].style.display = "block";
-//     }else{
-//         for(let i = 0; i < dis.length; i++)
-//             dis[i].style.display = "none";
-//     }
-// });
+count_credit_button.addEventListener('click', () => {
+    let dis = document.querySelectorAll("#credit_area");
+    let status = count_credit_button.checked;
+    if(status){
+        for(let i = 0; i < dis.length; i++)
+            dis[i].style.display = "block";
+    }else{
+        for(let i = 0; i < dis.length; i++)
+            dis[i].style.display = "none";
+    }
+});
 
 searchBox.addEventListener('input', () => {
     search();
