@@ -236,6 +236,7 @@ export function resetTable()
 
 export async function init()
 {   
+    await resetTable();
     console.log("init");
     let print = document.getElementById("print")
     var sel1 = document.getElementById("Select1");
@@ -307,6 +308,7 @@ export async function init()
             $(list).append(`<div id = "default">尚無任何課程資訊，輸入資訊以建立您的課表</div>`)
         }
         localStorage.used = JSON.stringify(isUsed);
+        await resetTable();
     }
     else
     {
@@ -328,6 +330,8 @@ export async function init()
         print.style.display = "none";
     // 初始化設定學分數
     display_credit();
+    await resetTable();
+
 }
 
 window.onload = function(){
@@ -353,30 +357,30 @@ export function clear()
         $("#accordion").hide();
         var list = $("#course").get()
         $(list).append(`<div id = "default">尚無任何課程資訊，輸入資訊以建立您的課表</div>`)
-        var storedcourses = JSON.parse(localStorage.courses);
+        //var storedcourses = JSON.parse(localStorage.courses);
         var storedUsed = JSON.parse(localStorage.used);
-        for(var i = 0; i < storedcourses.length; i++)
-        {
-            let start = 0;
-            let end = 0;
-            let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
-            if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
-            {
-                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
-                end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
-            }
-            else 
-            {
-                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
-                end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
-            }
-            for(var j = start - 1; j < end; ++j)
-                storedUsed[day - 1][j] = false;
-        }
+        // for(var i = 0; i < storedcourses.length; i++)
+        // {
+        //     let start = 0;
+        //     let end = 0;
+        //     let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
+        //     if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
+        //     {
+        //         start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
+        //         end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
+        //     }
+        //     else 
+        //     {
+        //         start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
+        //         end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
+        //     }
+        //     for(var j = start - 1; j < end; ++j)
+        //         storedUsed[day - 1][j] = false;
+        // }
         var cou = [];
         localStorage.used = JSON.stringify(storedUsed);
         localStorage.removeItem("courses");
-        localStorage.removeItem("course_list")
+        localStorage.removeItem("course_list");
         localStorage.courses = JSON.stringify(cou);
         getCourse();
     }
