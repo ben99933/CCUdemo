@@ -157,13 +157,13 @@ init();
 function delete_display(target, mode){
     if(mode == 'auto'){
         var course_list = JSON.parse(localStorage.course_list);
-        console.log(course_list);
         var storedUsed = JSON.parse(localStorage.used);
         for(var i = 0; i < course_list.length; i++)
         {   
-            let display_text = target.parentNode.parentNode.textContent;
-            if(display_text.includes(course_list[i]["課程名稱"]) && display_text.includes(course_list[i]['顯示上課時間']));
-            { 
+            let tmp = target.parentNode.parentNode;
+            let display_text = tmp.getElementsByTagName("td");
+            if((display_text[0].textContent === course_list[i]["課程名稱"]) && (display_text[1].textContent === course_list[i]["上課教室"]) && (display_text[2].textContent === course_list[i]["顯示上課時間"]))
+            {   
                 let start = 0;
                 let end = 0;
                 for(let j = 0; j < course_list[i]['上課時間'].length; ++j){
