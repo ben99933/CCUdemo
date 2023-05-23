@@ -1,5 +1,5 @@
 $URL = "http://localhost"
-$PORT = 3000
+$PORT = 8000
 
 # Start-Process "heroku" "local --port ${PORT}"
 START-Process "nodemon.cmd" "./bin/www"
