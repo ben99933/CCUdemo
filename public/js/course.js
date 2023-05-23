@@ -189,6 +189,7 @@ export function newCourse()
         }
         let startClass = 0;
         let endClass = 0;
+        console.log(start, end, classDay);
         if(check(start, end, classDay))
         {   
             console.log(start, end);
@@ -197,8 +198,20 @@ export function newCourse()
             startClass = Number(start) + 1;
             endClass = Number(end);
             console.log(startClass, endClass);
-            for(let j = Number(startClass); j <= Number(endClass); j++){
-                str = str + "," + String(j);
+            if(start >= 'A' && end <= 'J'){
+                let list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+                for(let j = Number(list.indexOf(start)) + 1; j <= list.indexOf(end); j++){
+                    str = str + "," + list[j];
+                }
+                startClass = 1 + (CLASS_MAP[start] - 1) * 3
+                endClass = 3 + (CLASS_MAP[end] - 1) * 3
+            }
+            else{
+                for(let j = Number(startClass); j <= Number(endClass); j++){
+                    str = str + "," + String(j);
+                }
+                startClass = 1 + (CLASS_MAP[start] - 1) * 2
+                endClass = CLASS_MAP[end] * 2
             }
             display_list(className, classLocation, str);
             let dstime = splittime(str);
