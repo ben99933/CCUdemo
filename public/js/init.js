@@ -264,7 +264,13 @@ export async function init()
         for(var j = 0; j < 30; ++j)
             isUsed[i][j] = false;
     }
-    if(localStorage.course_list !== undefined)
+    if(localStorage.course_list === undefined || localStorage.courses !== undefined)
+    {
+        // clear localStorage.courses and localStorage.used
+        localStorage.removeItem("courses"); // delete localStorage.courses
+        localStorage.used = JSON.stringify(isUsed); // set localStorage.used to isUsed (all false)
+    }
+    else if(localStorage.course_list !== undefined)
     {   
         var course_list = JSON.parse(localStorage.course_list);
         if(course_list.length !== 0)
