@@ -237,6 +237,7 @@ export function resetTable()
 export async function init()
 {   
     await resetTable();
+    getCourse();
     console.log("init");
     let print = document.getElementById("print")
     var sel1 = document.getElementById("Select1");
@@ -294,7 +295,7 @@ export async function init()
                 display_list(course_list[i]["課程名稱"], course_list[i]["上課教室"], course_list[i]["顯示上課時間"]);
             }
             localStorage.course_list = JSON.stringify(course_list);
-            await resetTable()
+            //await resetTable()
             createCurriculum().then($("#curriculum").rowspanizer())
             $("#curriculum").show()
             document.getElementById("curriculum").style.visibility = "visible";
@@ -308,7 +309,7 @@ export async function init()
             $(list).append(`<div id = "default">尚無任何課程資訊，輸入資訊以建立您的課表</div>`)
         }
         localStorage.used = JSON.stringify(isUsed);
-        await resetTable();
+        //await resetTable();
     }
     else
     {
@@ -330,7 +331,7 @@ export async function init()
         print.style.display = "none";
     // 初始化設定學分數
     display_credit();
-    await resetTable();
+    //await resetTable();
 
 }
 
