@@ -22,8 +22,8 @@
         <nav class = "bg-[#eacda3] text-black top-0 nav justify-center p-2 py-3 mt-0 w-full relative">
             <div class = "nav justify-center">
                 <div class = 'flex justify-between items-center'>
-                    <div class = 'flex items-center w-full md:w-4/12'>
-                        <img src = '/img/logo.png' class = 'h-10'>
+                    <div class = "font-bold text-2xl bg-gradient-to-br from-orange-300 to-red-700 text-transparent bg-clip-text">
+                        鳳梨課表
                     </div>
                     <div class = 'right-0 hidden md:block'>
                         <a class = "btn-head" href = "/">回首頁</a>
@@ -40,24 +40,24 @@
                 </div>
             </div>
         </nav>
-        <div class = 'w-full bg-[#eacda3] collapse' id = 'mobile_menu'>
+        <div class = 'w-full bg-[#eacda3] listcollapse' id = 'mobile_menu'>
             <div class = 'grid grid-cols-1 w-10/12 mx-auto text-white'>
-                <a class = "btn-head" href = "/">回首頁</a>
+                <a class = "btn-head" href = "/index">回首頁</a>
                 <a class = "btn-head" href = "/about">關於我們</a>
             </div>
         </div>
         <div class = 'w-11/12 md:w-8/12 mx-auto'>
             <div class = "shadow-md shadow-gray-400 rounded-lg my-10 py-3 px-3">
-                <div class = "text-center text-red-600 px-3 py-3">
+                <!-- <div class = "text-center text-red-600 px-3 py-3">
                     <div class = "text-xl font-extrabold">
                         重要告知
                     </div>
                     <div class = "text-base py-2 font-extrabold">
-                        本網站將在今天(5/24)晚上 12:00 進行維護與網站版本更新，<br>
+                        本網站將在今天(5/23)晚上 12:00 進行維護與網站版本更新，<br>
                         本次更新後將會將課程搜尋功能進行優化，加上學分自動計算功能<br>
                         屆時可能會清理掉您的課表，敬請見諒。
                     </div>
-                </div>
+                </div> -->
                 <div class = "text-xl font-semibold">
                     搜尋課程
                 </div>
@@ -102,11 +102,11 @@
                 </form>
                 <hr class = 'my-3'>
                 <div class = 'text-right flex justify-end items-center flex-row'>
-                    <!-- <label class = "relative inline-flex items-center cursor-pointer mx-3">
+                    <label class = "relative inline-flex items-center cursor-pointer mx-3">
                         <input type = "checkbox" checked class = "sr-only peer" id="count_credit_button">
                         <div class = "w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#cea671]"></div>
                         <span class = "ml-3 text-sm font-medium text-gray-900">學分計算</span>
-                    </label> -->
+                    </label>
                     <button type = "button" onclick = "courseCollapse()" class = "btn btn-primary mx-1">
                         展開課程列表
                     </button>
@@ -137,10 +137,10 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <!-- <div class = "text-right py-5" id = "credit_area">
+                        <div class = "text-right py-5" id = "credit_area">
                             目前學分：
                             <span id = "credit">0</span>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,10 +148,10 @@
             <div id = "wrap" class = "bg-[#e2dfc2] opacity-90 rounded py-3 px-3 table-div">
                 <table id = "curriculum" class = "bg-inherit w-full mx-auto border-separate border-space space-x-3 text-center">
                 </table>    
-                <!-- <div class = "text-right py-5" id = "credit_area">
+                <div class = "text-right py-5" id = "credit_area">
                     目前學分：
                     <span id = "credit">0</span>
-                </div> -->
+                </div>
             </div>
         </div>
         <div class = "bg-[#eacda3] mt-3 py-3 w-full flex items-center">

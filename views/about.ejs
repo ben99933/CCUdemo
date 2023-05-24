@@ -21,7 +21,9 @@
             <div class = "nav justify-center">
                 <div class = 'flex justify-between items-center'>
                     <div class = 'flex items-center w-full md:w-4/12'>
-                        <img src = '/img/logo.png' class = 'h-10'>
+                        <div class = "font-bold text-2xl bg-gradient-to-br from-orange-300 to-red-700 text-transparent bg-clip-text">
+                            鳳梨課表
+                        </div>
                     </div>
                     <div class = 'right-0 hidden md:block'>
                         <a class = "btn-head" href = "/index">回首頁</a>
@@ -38,7 +40,7 @@
                 </div>
             </div>
         </nav>
-        <div class = 'w-full bg-[#eacda3] collapse' id = 'mobile_menu'>
+        <div class = 'w-full bg-[#eacda3] listcollapse' id = 'mobile_menu'>
             <div class = 'grid grid-cols-1 w-10/12 mx-auto text-white'>
                 <a class = "btn-head" href = "/index">回首頁</a>
                 <a class = "btn-head" href = "/about">關於我們</a>
@@ -46,33 +48,34 @@
         </div>
         <div class = 'w-full mx-auto py-6'>
             <div class = 'w-11/12 md:w-7/12 mx-auto my-3'>
-                <div class = 'text-center text-3xl font-semibold border-b-2 mb-3'>
+                <div class = 'text-center text-3xl font-bold border-b-2 mb-3 bg-gradient-to-br from-orange-300 to-red-700 text-transparent bg-clip-text'>
                     關於我們
                 </div>
                 <div class = "text-left text-xl mx-auto">
                     我們是現在就讀於中正大學的學生，為了改善中正學生的排課選課體驗而建立了鳳梨課表團隊，<br>
                     希望能透過我們所學和自身經驗打造一個更加舒適且符合中正學生所需的服務。<br>
                     目前我們提供之功能如下<br><br>
-                    1. 手動輸入課程資訊，以及搜尋課程(可保存於同裝置之同一瀏覽器)<br>
-                    2. 產生對應之課表<br>
-                    3. 下載課表圖檔(行動用戶則無此服務)<br><br>
-                    有任何問題歡迎透過下方回饋表單告知。
+                    1.搜尋開課資訊<br>
+                    2.產生對應之課表<br>
+                    3.手動產生自定義課表<br>
+                    4.自動計算學分<br>
+                    5.下載課表圖檔(行動用戶則無此服務)<br><br>
+                    有任何問題歡迎透過關於頁面之回饋表單告知
                 </div>
-            </div>
-            <div class = 'w-11/12 md:w-7/12 mx-auto my-3'>
-                <div class = 'text-center text-3xl font-semibold border-b-2 mb-3'>
-                    版本更新紀錄
+                <div class = 'text-center text-3xl font-bold border-b-2 mb-3 bg-gradient-to-br from-orange-300 to-red-700 text-transparent bg-clip-text'>
+                    版本紀錄
                 </div>
                 <div class = "text-left text-xl mx-auto">
                     v a1.0.0 第一次公開測試版本開放<br>
                     v a1.5.0 UI大規模重構與優化，準備加入搜尋功能<br>
                     v a2.0.0 UI全面使用Tailwind改寫<br>
-                    v 3.0.0 加入搜尋功能，並使用MySQL當作資料庫
-                    v 3.0.1 資料庫更改為postgreSQL
+                    v 3.0.0 加入搜尋功能，並使用MySQL當作資料庫<br>
+                    v 3.0.1 資料庫更改為postgreSQL<br>
+                    v 3.1.0 增加計算學分之功能
                 </div>
             </div>
             <div class = 'w-11/12 md:w-7/12 mx-auto my-3'>
-                <div class = 'text-center text-3xl font-semibold border-b-2 mb-3'>
+                <div class = 'text-center text-3xl font-bold border-b-2 mb-3 bg-gradient-to-br from-orange-300 to-red-700 text-transparent bg-clip-text'>
                     成員介紹
                 </div>
                 <div class = 'grid grid-cols-1 md:grid-cols-4 mx-auto border'>
@@ -117,7 +120,7 @@
                 </div>
             </div>
             <div class = 'w-11/12 md:w-7/12 mx-auto my-3'>
-                <div class = 'text-center text-3xl font-semibold border-b-2 mb-3'>
+                <div class = 'text-center text-3xl font-bold border-b-2 mb-3 bg-gradient-to-br from-orange-300 to-red-700 text-transparent bg-clip-text'>
                     聯絡我們
                 </div>
                 <div class = "mx-auto">

@@ -11,6 +11,5 @@ if(process.env.USING_DATABASE== "postgre"){
 }else{
   console.log("please choose a database!!");
   exit();
-  
 }
 module.exports = connection;
