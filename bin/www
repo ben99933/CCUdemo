@@ -35,7 +35,7 @@ server.listen(port, ()=>{
   }
   database.connect((err)=>{
     if(err){
-      
+      console.log("something is wrong with database");
       console.log(err);
       return;
     }else{
