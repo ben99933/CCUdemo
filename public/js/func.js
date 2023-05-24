@@ -4,7 +4,7 @@ function block_capture()
     {
         var a = document.createElement("a");
         a.href = canvas
-            .toDataURL("image/jpeg", 1)
+            .toDataURL("image/jpeg", 0.92)
             .replace("image/jpeg", "image/octet-stream");
         a.download = "curriculum.jpg";
         a.click();

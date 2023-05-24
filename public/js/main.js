@@ -1,5 +1,5 @@
-import { init, clear, display_credit} from "./init.js"
-import { display_list, getCourse, newCourse, splittime } from "./course.js"
+import { init, clear } from "./init.js"
+import { getCourse, newCourse } from "./course.js"
 
 const PLACES_TO_NUMBER = 
 {
@@ -70,80 +70,127 @@ var clean = document.getElementById("clean");
 submit.onclick = newCourse;
 clean.onclick = clear;
 init();
-    
-function delete_display(target, mode){
-    if(mode == 'auto'){
-        var course_list = JSON.parse(localStorage.course_list);
-        var storedUsed = JSON.parse(localStorage.used);
-        for(var i = 0; i < course_list.length; i++)
-        {   
-            let tmp = target.parentNode.parentNode;
-            let display_text = tmp.getElementsByTagName("td");
-            if((display_text[0].textContent === course_list[i]["課程名稱"]) && (display_text[1].textContent === course_list[i]["上課教室"]) && (display_text[2].textContent === course_list[i]["顯示上課時間"]))
-            {   
-                let start = 0;
-                let end = 0;
-                for(let j = 0; j < course_list[i]['上課時間'].length; ++j){
-                    for(let k = 0; k < course_list[i]['上課時間'][j]['time'].length; ++k){
-                        storedUsed[course_list[i]['上課時間'][j]['day'] - 1][course_list[i]['上課時間'][j]['time'][k]] = false;
-                    }
-                }
-                let credit = Number(localStorage.credit);
-                credit -= Number(course_list[i]['學分數']);
-                localStorage.credit = credit;
-                course_list.splice(i, 1);
-                break;
-            }
-        }
-        localStorage.used = JSON.stringify(storedUsed);
-        localStorage.course_list = JSON.stringify(course_list);//done
-    }
-    else if(mode == 'noauto'){
-        // 有bug，全都為auto
-        console.log('noauto');
-        // var course_list = JSON.parse(localStorage.course_list);
-        // console.log(course_list);
-        // var storedUsed = JSON.parse(localStorage.used);
-        // for(var i = 0; i < course_list.length; i++)
-        // {   
-        //     let display_text = target.parentNode.parentNode.textContent;
-        //     if(display_text.includes(course_list[i]["課程名稱"]) && display_text.includes(course_list[i]['顯示上課時間']));
-        //     { 
-        //         let start = 0;
-        //         let end = 0;
-        //         for(let j = 0; j < course_list[i]['上課時間'].length; ++j){
-        //             for(let k = 0; k < course_list[i]['上課時間'][j]['time'].length; ++k){
-        //                 storedUsed[course_list[i]['上課時間'][j]['day'] - 1][course_list[i]['上課時間'][j]['time'][k]] = false;
-        //             }
-        //         }
-        //         let credit = Number(localStorage.credit);
-        //         credit -= Number(course_list[i]['學分數']);
-        //         localStorage.credit = credit;
-        //         course_list.splice(i, 1);
-        //         break;
-        //     }
-        // }
-        // localStorage.used = JSON.stringify(storedUsed);
-        // localStorage.course_list = JSON.stringify(course_list);//done
-    }
-}
+
+// var items =
+// [
+//     ['文學院學士班', '中文系', '中文所', '外文系', '外文所', '歷史系', '歷史所', '哲學系', '哲學所', '語言所', '英語教學所', '台文創應所'],
+//     ['理學院學士班', '數學系', '應數所', '地震所', '物理系', '物理所', '統科所', '地環系', '地環所', '數學所', '分子生物所', '生醫系',  '生醫所', '化生系', '化生所', '跨領域科學國際博士學位學程'],
+//     ['社福系', '社福所', '心理系', '心理所', '勞工系', '勞工所', '政治系', '政治所', '傳播系', '電傳所', '戰略所', '臨床心理所', '認知科學博士學位學程'],
+//     ['工學院學士班', '工學院碩士班', '資工系', '資工所', '電機系', '電機所', '機械系', '機械所', '化工系', '化工所', '通訊系', '通訊所', '光機電所','前瞻製造系統碩/博士學位學程'],
+//     ['經濟學系', '國經所', '財金系', '財金所', '企管系', '企管所', '會資系', '會資所', '資管系', '資管所', '國際財管碩士學位學程', '行銷管理所', '醫療資訊管理所'],
+//     ['法學院學士班',  '法律所', '法學組', '法制組', '財法系', '財法所'],
+//     ['成教系',  '成教所', '教育所', '犯防系', '犯防所', '師培中心', '休閒教育所', '運競系', '課研所', '教育領導碩士學位學程', '高齡教育所'],
+//     ['體育中心', '通識中心', '軍訓', '語言中心']
+// ]
+
+// let e = document.getElementById("Select4");
+
+// e.addEventListener('change', (event) =>
+// {
+//     if(PLACES_TO_NUMBER[e.options[e.selectedIndex].text] == -1)
+//     {
+//         document.getElementById("Select5").setAttribute('disabled', 'disabled')
+//         document.getElementById("Select6").setAttribute('disabled', 'disabled')
+//         document.getElementById("Select7").setAttribute('disabled', 'disabled')
+//         document.getElementById("search").setAttribute('disabled', 'disabled')
+//     }
+//     else
+//     {
+//         document.getElementById("Select7").setAttribute('disabled', 'disabled')
+//         let places =  e.options[e.selectedIndex].text;
+//         var str = '<option selected>系所</option>'
+//         for (var item of items[PLACES_TO_NUMBER[places]])
+//             str += "<option>" + item + "</option>"
+//         document.getElementById("Select5").innerHTML = str;
+//         document.getElementById("Select5").removeAttribute('disabled')
+//     }
+// });
+
+// let depart = document.getElementById("Select5");
+// depart.addEventListener('change', (event) =>
+// {
+//     let departs =  depart.options[depart.selectedIndex].text;
+//     if(departs === '通識中心')
+//     {
+//         document.getElementById("Select7").setAttribute('disabled', 'disabled')
+//         document.getElementById("search").setAttribute('disabled', 'disabled')
+//         document.getElementById("Select6").removeAttribute('disabled')
+//         var str = '<option selected value = "-1">向度</option>'
+//         var list = ['基礎概論', '資訊能力', '藝術與美學', '能源、環境與生態', '人文思維與生命探索', '公民與社會參與', '經濟與國際脈動', '自然科學與技術']
+//         for (let i = 0; i < list.length; ++i)
+//             str += "<option value = '" + i + "'>" + list[i] + "</option>"
+//         document.getElementById("Select6").innerHTML = str;
+//     }
+//     else if(departs !== "系所")
+//     {
+//         document.getElementById("Select6").setAttribute('disabled', 'disabled')
+//         document.getElementById("search").removeAttribute('disabled')
+//         var str = '<option selected>課程選擇</option>'
+//         var data = fetchAsync("https://ccuclassscheduleapi.hankwu99.repl.co/test_api/" + CHINESE_DEPART_TO_NUMBER[departs])
+//         for(var item of data)
+//             str += "<option>" + item[2] + "</option>"
+//         document.getElementById("Select7").innerHTML = str;
+//     }
+//     else
+//     {
+//         document.getElementById("Select7").setAttribute('disabled', 'disabled')
+//         document.getElementById("search").setAttribute('disabled', 'disabled')
+//     }
+// });
+
+// let dimension = document.getElementById("Select6");
+// depart.addEventListener('change', (event) =>
+// {
+//     let dimen =  dimension.options[depart.selectedIndex].value;
+//     if(dimen === "-1")
+//     {
+//         document.getElementById("Select7").setAttribute('disabled', 'disabled')
+//         document.getElementById("search").setAttribute('disabled', 'disabled')
+//     }
+//     else 
+//     {
+//         document.getElementById("search").removeAttribute('disabled')
+//     }
+
+// });
+
+
 
 document.querySelector('.coursesGroup').addEventListener('click', function(event)
 {
     const target = event.target;
-    // 目前這裡有bug，不論是手動還是自動加入的課程，都是id為auto
-    if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'auto')
-    {   
-        delete_display(target, 'auto');
-        display_credit();
+    if(target.classList.contains('btn-delete'))
+    {
+        var storedcourses = JSON.parse(localStorage.courses);
+        var storedUsed = JSON.parse(localStorage.used);
+        for(var i = 0; i < storedcourses.length; i++)
+        {
+            if(target.parentNode.parentNode.textContent.includes(storedcourses[i]["課程名稱"]) && target.parentNode.parentNode.textContent.includes(storedcourses[i]["上課時間"]["開始節次"]))
+            { 
+                
+                let start = 0;
+                let end = 0;
+                let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
+                if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
+                {
+                    start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
+                    end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
+                }
+                else 
+                {
+                    start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
+                    end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
+                }
+                for(var j = start - 1; j < end; ++j)
+                    storedUsed[day - 1][j] = false;
+                storedcourses.splice(i, 1);
+                break;
+            }
+        }
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
-        getCourse();
-    }else if(target.classList.contains('btn-delete') && target.parentNode.parentNode.dataset.id == 'noauto'){
-        delete_display(target, 'noauto');
-        console.log('noauto');
-        var row = target.parentNode.parentNode;
-        row.parentNode.removeChild(row);
+        localStorage.used = JSON.stringify(storedUsed);
+        localStorage.courses = JSON.stringify(storedcourses);//done
         getCourse();
     }
 });

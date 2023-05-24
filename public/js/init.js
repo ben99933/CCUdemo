@@ -1,4 +1,4 @@
-import { getCourse, createCurriculum, display_list } from "./course.js"
+import { getCourse, createCurriculum } from "./course.js"
 
 const CHINESE_WORD_TO_NUMBER =
 {
@@ -236,8 +236,6 @@ export function resetTable()
 
 export async function init()
 {   
-    await resetTable();
-    console.log("init");
     let print = document.getElementById("print")
     var sel1 = document.getElementById("Select1");
     var tmp = "<option selected>星期</option>";
@@ -265,35 +263,35 @@ export async function init()
         for(var j = 0; j < 30; ++j)
             isUsed[i][j] = false;
     }
-    if(localStorage.course_list === undefined || localStorage.courses !== undefined)
-    {
-        // clear localStorage.courses and localStorage.used
-        localStorage.removeItem("courses"); // delete localStorage.courses
-        localStorage.used = JSON.stringify(isUsed); // set localStorage.used to isUsed (all false)
-    }
-    else if(localStorage.course_list !== undefined)
-    {   
-        var course_list = JSON.parse(localStorage.course_list);
-        if(course_list.length !== 0)
+    if(localStorage.courses !== undefined)
+    {     
+        var storedcourses = JSON.parse(localStorage.courses);
+        if(storedcourses.length !== 0)
         {
-            for(var index = 0; index < course_list.length; index++)
+            for(var index = 0; index < storedcourses.length; index++)
             {
-                let className = course_list[index]["課程名稱"]
-                let courseTime = course_list[index]["上課時間"]
-                let classLocation = course_list[index]["上課教室"]
+                let className = storedcourses[index]["課程名稱"]
+                let courseTime = storedcourses[index]["上課時間"]
+                let classLocation = storedcourses[index]["上課教室"]
                 let startClass = 0
                 let endClass = 0
-                console.log(courseTime)
-                for(let j = 0; j < courseTime.length; j++){
-                    for(let k = 0; k < courseTime[j]['time'].length; k++){
-                        isUsed[courseTime[j]['day'] - 1][courseTime[j]['time'][k]] = true;
-                    }
+                $('#accordion > tbody:last-child').append(`<tr><td class = 'td'>${className}</td><td class = 'td'>${classLocation}</td><td class = 'td'>${courseTime["星期"]} ${courseTime["開始節次"]} ~ ${courseTime["結束節次"]}</td><td class = 'td'><button type = "button" class = "btn-delete inline-flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>刪除</button></td></tr>`);
+                $("#accordion").show();
+                if(courseTime["開始節次"] >= 'A' && courseTime["開始節次"] <= 'J')
+                {
+                    startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 3
+                    endClass = 3 + (CLASS_MAP[courseTime["結束節次"]] - 1) * 3
                 }
+                else 
+                {
+                    startClass = 1 + (CLASS_MAP[courseTime["開始節次"]] - 1) * 2
+                    endClass = CLASS_MAP[courseTime["結束節次"]] * 2 
+                }
+                for(var i = startClass - 1; i < endClass; ++i)
+                    isUsed[CHINESE_WORD_TO_NUMBER[courseTime["星期"]] - 1][i] = true;
             }
-            for(let i = 0; i < course_list.length; ++i){
-                display_list(course_list[i]["課程名稱"], course_list[i]["上課教室"], course_list[i]["顯示上課時間"]);
-            }
-            localStorage.course_list = JSON.stringify(course_list);
             await resetTable()
             createCurriculum().then($("#curriculum").rowspanizer())
             $("#curriculum").show()
@@ -308,7 +306,6 @@ export async function init()
             $(list).append(`<div id = "default">尚無任何課程資訊，輸入資訊以建立您的課表</div>`)
         }
         localStorage.used = JSON.stringify(isUsed);
-        await resetTable();
     }
     else
     {
@@ -330,15 +327,6 @@ export async function init()
         print.style.display = "none";
     // 初始化設定學分數
     display_credit();
-    await resetTable();
-
-}
-
-window.onload = function(){
-    if(localStorage.credit === undefined){
-        localStorage.credit = 0;
-    }
-    display_credit();
 }
 
 export function display_credit(){
@@ -349,7 +337,6 @@ export function display_credit(){
 
 export function clear()
 {   
-    console.log("clear");
     var e = document.querySelector("#accordion");
     e.innerHTML = ""
     if(e.style.display != "none")
@@ -357,41 +344,31 @@ export function clear()
         $("#accordion").hide();
         var list = $("#course").get()
         $(list).append(`<div id = "default">尚無任何課程資訊，輸入資訊以建立您的課表</div>`)
-        //var storedcourses = JSON.parse(localStorage.courses);
+        var storedcourses = JSON.parse(localStorage.courses);
         var storedUsed = JSON.parse(localStorage.used);
-        // for(var i = 0; i < storedcourses.length; i++)
-        // {
-        //     let start = 0;
-        //     let end = 0;
-        //     let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
-        //     if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
-        //     {
-        //         start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
-        //         end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
-        //     }
-        //     else 
-        //     {
-        //         start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
-        //         end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
-        //     }
-        //     for(var j = start - 1; j < end; ++j)
-        //         storedUsed[day - 1][j] = false;
-        // }
+        for(var i = 0; i < storedcourses.length; i++)
+        {
+            let start = 0;
+            let end = 0;
+            let day = CHINESE_WORD_TO_NUMBER[storedcourses[i]["上課時間"]["星期"]];
+            if(storedcourses[i]["上課時間"]["開始節次"] >= 'A' && storedcourses[i]["上課時間"]["開始節次"] <= 'J')
+            {
+                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 3
+                end = 3 + (CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] - 1) * 3
+            }
+            else 
+            {
+                start = 1 + (CLASS_MAP[storedcourses[i]["上課時間"]["開始節次"]] - 1) * 2
+                end = CLASS_MAP[storedcourses[i]["上課時間"]["結束節次"]] * 2 
+            }
+            for(var j = start - 1; j < end; ++j)
+                storedUsed[day - 1][j] = false;
+        }
         var cou = [];
         localStorage.used = JSON.stringify(storedUsed);
         localStorage.removeItem("courses");
-        localStorage.removeItem("course_list");
         localStorage.courses = JSON.stringify(cou);
         getCourse();
-    }
-    if(localStorage.used !== undefined){
-        let storedUsed = JSON.parse(localStorage.used);
-        for(let i = 0; i < 6; ++i)
-        {
-            for(let j = 0; j <= 30; ++j)
-                storedUsed[i][j] = false;
-        }
-        localStorage.used = JSON.stringify(storedUsed);
     }
     localStorage.credit = 0;
     display_credit();
