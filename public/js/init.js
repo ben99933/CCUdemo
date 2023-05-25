@@ -331,6 +331,7 @@ export async function init()
         print.style.display = "none";
     // 初始化設定學分數
     display_credit();
+    getCourse();
     //await resetTable();
 
 }
