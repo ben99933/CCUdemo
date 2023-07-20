@@ -8,4 +8,4 @@ Disallow: /public/
 
 Allow: /views/index.html
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://ccudemo.herokuapp.com/sitemap.xml
