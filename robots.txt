@@ -4,6 +4,6 @@
 
 User-agent: *
 Disallow: /
-Allow: /index.html
+Allow: /index
 
 Sitemap: https://ccudemo.herokuapp.com/sitemap.xml
