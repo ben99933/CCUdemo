@@ -3,7 +3,6 @@
 # the robotic uprising of the mid 90's which wiped out all humans.
 
 User-agent: *
-Disallow: /
-Allow: /index
+Disallow: /about
 
 Sitemap: https://ccudemo.herokuapp.com/sitemap.xml
