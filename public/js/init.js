@@ -1,5 +1,4 @@
 import { getCourse, createCurriculum, display_list } from "./course.js"
-
 const CHINESE_WORD_TO_NUMBER =
 {
     '一': 1,
@@ -311,7 +310,9 @@ export async function init()
         localStorage.used = JSON.stringify(isUsed);
         //await resetTable();
     }
-    else
+    
+
+    
     {
         openModal("modal1");
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))

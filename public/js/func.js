@@ -1,3 +1,4 @@
+// import {redirectCancel} from "./newWebRedirect.js"
 function block_capture() 
 {
     html2canvas(document.getElementById("wrap")).then(function (canvas)
@@ -14,7 +15,10 @@ function block_capture()
 function closeModal(modalId)
 {
     var modal = document.getElementById(modalId)
-    modal.classList.add('hidden')
+    modal.classList.add('hidden');
+    if(modalId == 'modal1'){
+        redirectCancel();
+    }
 }
 
 function collapse()
@@ -35,4 +39,19 @@ function courseCollapse()
         x.classList.add("active");
 }
 
+
+
+let timer = null;
+const redirect=()=>{
+    timer = setTimeout(()=>{
+        window.location.href = "/redirect/new";
+        console.log("redirect")
+    },9000);
+};
+const redirectCancel = ()=>{
+    console.log("cancel redirect");
+    clearTimeout(timer);
+    timer = null;
+}
+redirect();
 

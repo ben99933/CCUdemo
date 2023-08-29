@@ -10,6 +10,7 @@ var aboutRouter = require('./routes/about.js');
 var searchCourseRouter = require('./routes/searchCourse.js');
 var sitemapRouter = require('./routes/sitemap.js');
 var robotsRouter = require('./routes/robots.js');
+var redirectRouter = require('./routes/redirect.js');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/about', aboutRouter);
 app.use("/searchCourse", searchCourseRouter);
 app.use("/sitemap.xml", sitemapRouter)
 app.use("/robots.txt", robotsRouter)
+app.use("/redirect", redirectRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
